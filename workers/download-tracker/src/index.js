@@ -16,7 +16,7 @@ import { handleRuntimeApi } from "./runtime.js";
  */
 
 const PROJECT = "mialock";
-const DEFAULT_ASSET = "mialock-0.1.0.tar.gz";
+const DEFAULT_ASSET = "mialock-0.1.1.tar.gz";
 const DEFAULT_OWNER = "AzielEliab";
 const DEFAULT_REPO = "mialock";
 const DEFAULT_BRANCH = "main";
@@ -374,7 +374,7 @@ async function indexHtml(env) {
   <div class="brandrow"><img class="brandmark" src="/sigil.png" width="40" height="40" alt="" decoding="async"></div>
 <h1>M.I.A.Lock</h1>
   <p class="motto">Search broadly. Match probabilistically. Challenge every hit. Preserve provenance. Verify before action. Author Aziel Eliab.</p>
-  <p class="banner">THIS IS: purpose-bound missing-person investigative software — per-person historical event maps (date × time × event × duration) plus archive / Doe cold-case search options. THIS IS NOT: live location tracking, an identification, a crawler of restricted law-enforcement systems, or automated accusation. Doe leads ≠ ID. Author Aziel Eliab.</p>
+  <p class="banner">THIS IS: purpose-bound missing-person investigative software — per-person historical event maps (date × time × event × duration), Doe descriptor matching (leads only), uncertainty ellipses, and coverage-heat layers (search intensity — not presence). THIS IS NOT: live location tracking, an identification, a crawler of restricted law-enforcement systems, or automated accusation. Doe hit ≠ ID. Author Aziel Eliab.</p>
   <div class="card">
     <div class="nums">
       <p class="count">${v}<span>Views</span></p>

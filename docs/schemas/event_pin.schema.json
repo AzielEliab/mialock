@@ -28,6 +28,39 @@
       "enum": ["unverified", "probable", "verified", "rejected"]
     },
     "source_tier": { "type": "string" },
-    "notes": { "type": "string" }
+    "notes": { "type": "string" },
+    "location_uncertainty_m": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Location uncertainty radius in meters (one ellipse input)."
+    },
+    "uncertainty_semi_major_m": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Explicit ellipse semi-major axis in meters."
+    },
+    "uncertainty_semi_minor_m": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Explicit ellipse semi-minor axis in meters."
+    },
+    "uncertainty_bearing_deg": {
+      "type": "number",
+      "description": "Ellipse orientation in degrees."
+    },
+    "jurisdiction_footprint_m": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Jurisdiction grain used as a soft ellipse contribution — not a full-county disk."
+    },
+    "time_window_geo_soft_m": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Time-window geo soft-band in meters (unknown/wide duration expands the ellipse)."
+    },
+    "doe_descriptor": {
+      "type": "object",
+      "description": "Demographic / circumstance fields on a Doe or unidentified notice. Compatibility only — never an ID."
+    }
   }
 }

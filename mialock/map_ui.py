@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
+from mialock.coverage import coverage_report
+from mialock.doe import match_subject
 from mialock.models import PersonCase, casebook_index, load_casebook
 from mialock.search_options import list_search_modes, render_queries
 
@@ -79,6 +81,12 @@ PAGE = r"""<!DOCTYPE html>
   button { cursor: pointer; background: linear-gradient(180deg, #3f8f7a, #2f6d5e);
     border-color: #4aa890; font-weight: 600; }
   button.ghost { background: transparent; border-color: var(--line); font-weight: 500; color: var(--muted); }
+  .layer-toggles { display: flex; flex-wrap: wrap; gap: 0.55rem 0.85rem; align-items: center; }
+  .layer-toggles label {
+    display: flex; flex-direction: row; align-items: center; gap: 0.4rem;
+    text-transform: none; letter-spacing: 0; font-size: 0.8rem; color: var(--ink);
+  }
+  .layer-toggles input { accent-color: var(--accent2); }
   main { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; min-height: 0; }
   @media (max-width: 900px) {
     main { grid-template-columns: 1fr; grid-template-rows: 42vh 1fr; }
@@ -138,6 +146,29 @@ PAGE = r"""<!DOCTYPE html>
     font-size: 0.72rem; color: var(--accent); margin: 0.45rem 0 0;
   }
   .queries .note { color: var(--muted); font-size: 0.78rem; margin: 0.35rem 0 0; }
+  .leads { margin: 1.1rem 0 0; }
+  .leads h3 {
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin: 0 0 0.55rem;
+  }
+  .lead-card {
+    border: 1px solid var(--line); border-radius: 10px; padding: 0.65rem 0.75rem;
+    margin: 0 0 0.55rem; background: rgba(255,255,255,0.02);
+  }
+  .lead-card .score {
+    font-family: "IBM Plex Mono", ui-monospace, monospace; color: var(--accent);
+    font-size: 0.85rem;
+  }
+  .lead-card .title { font-weight: 600; margin: 0.15rem 0 0.35rem; }
+  .lead-card table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+  .lead-card th { text-align: left; color: var(--muted); font-weight: 500; padding: 0.12rem 0.3rem 0.12rem 0; }
+  .lead-card td { padding: 0.12rem 0.3rem 0.12rem 0; }
+  .st-match { color: #7dcf9a; }
+  .st-soft_match { color: #c4a35a; }
+  .st-mismatch { color: #d47a7a; }
+  .st-unknown { color: var(--muted); }
+  .lead-card .warn-mini { color: var(--warn); font-size: 0.72rem; margin: 0.4rem 0 0; }
+  .coverage-note { color: var(--muted); font-size: 0.75rem; margin: 0 0 0.75rem; }
   .mode-flags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 0.85rem; }
   .mode-flags span {
     font-size: 0.7rem; border: 1px solid var(--line); border-radius: 999px;
@@ -175,6 +206,10 @@ PAGE = r"""<!DOCTYPE html>
         <option value="all">All pins</option>
       </select>
     </label>
+    <div class="layer-toggles">
+      <label><input type="checkbox" id="ellipses" checked> Uncertainty ellipses</label>
+      <label><input type="checkbox" id="heat" checked> Coverage heat</label>
+    </div>
     <button type="button" id="fit">Fit pins</button>
     <button type="button" class="ghost" id="reload">Reload</button>
   </div>
@@ -187,7 +222,9 @@ PAGE = r"""<!DOCTYPE html>
       <p id="personSummary"></p>
     </div>
     <div class="mode-flags" id="modeFlags"></div>
+    <p class="coverage-note" id="coverageNote"></p>
     <div class="legend" id="legend"></div>
+    <div class="leads" id="doeLeads"></div>
     <ol class="timeline" id="timeline"></ol>
     <div class="queries" id="queries"></div>
   </aside>
@@ -237,9 +274,12 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 map.setView([41.88, -87.63], 9);
 
-let layer = L.layerGroup().addTo(map);
+let coverageLayer = L.layerGroup().addTo(map);
+let ellipseLayer = L.layerGroup().addTo(map);
 let pathLayer = L.layerGroup().addTo(map);
+let layer = L.layerGroup().addTo(map);
 let currentFeatures = [];
+let coverageFeatures = [];
 
 function colorFor(event) {
   return EVENT_COLORS[event] || "#c4a35a";
@@ -315,9 +355,46 @@ function renderTimeline(features) {
     });
 }
 
+function coverageColor(result, intensity) {
+  const i = Math.max(0, Math.min(1, intensity || 0));
+  if (result === "zero_compatible_hits") return `rgba(110, 140, 180, ${0.18 + i * 0.42})`;
+  if (result === "low_coverage") return `rgba(196, 163, 90, ${0.12 + i * 0.28})`;
+  if (result === "failed" || result === "access_denied") return `rgba(180, 90, 90, ${0.1 + i * 0.2})`;
+  return `rgba(61, 155, 132, ${0.16 + i * 0.45})`;
+}
+
+function drawCoverage(geojson) {
+  coverageLayer.clearLayers();
+  coverageFeatures = (geojson && geojson.features) || [];
+  const framing = (geojson && geojson.properties && geojson.properties.framing) ||
+    "Heat = search coverage intensity / negative-evidence weight — not a probability of presence.";
+  document.getElementById("coverageNote").textContent = framing;
+  coverageFeatures.forEach(f => {
+    if (!f.geometry || f.geometry.type !== "Point") return;
+    const p = f.properties || {};
+    const [lon, lat] = f.geometry.coordinates;
+    const stroke = (p.result === "zero_compatible_hits") ? "#6e8cb4"
+      : (p.result === "low_coverage") ? "#c4a35a"
+      : (p.result === "failed" || p.result === "access_denied") ? "#b45a5a"
+      : "#3d9b84";
+    L.circle([lat, lon], {
+      radius: p.radius_m || 8000,
+      color: stroke,
+      weight: 1,
+      fillColor: stroke,
+      fillOpacity: 0.16 + 0.38 * (p.intensity || 0),
+      className: "coverage-heat"
+    }).bindTooltip(
+      `${p.source_id || "adapter"} · ${p.result || "searched"} · coverage ${Math.round((p.intensity || 0) * 100)}% — not presence`
+    ).addTo(coverageLayer);
+  });
+  applyLayerToggles();
+}
+
 function drawPerson(geojson) {
   layer.clearLayers();
   pathLayer.clearLayers();
+  ellipseLayer.clearLayers();
   currentFeatures = geojson.features || [];
   const props = geojson.properties || {};
   document.getElementById("personName").textContent = props.display_name || props.subject_id || "—";
@@ -327,6 +404,22 @@ function drawPerson(geojson) {
   const events = [];
 
   currentFeatures.forEach(f => {
+    const kind = (f.properties && f.properties.kind) || "";
+    if (f.geometry && f.geometry.type === "Polygon" && kind === "uncertainty_ellipse") {
+      const ring = (f.geometry.coordinates[0] || []).map(([lon, lat]) => [lat, lon]);
+      const p = f.properties || {};
+      L.polygon(ring, {
+        color: "#c4a35a",
+        weight: 1.2,
+        dashArray: "4 6",
+        fillColor: "#c4a35a",
+        fillOpacity: 0.08,
+        className: "uncertainty-ellipse"
+      }).bindTooltip(
+        `Uncertainty ellipse ${Math.round(p.semi_major_m || 0)}×${Math.round(p.semi_minor_m || 0)} m — not live location`
+      ).addTo(ellipseLayer);
+      return;
+    }
     if (f.geometry && f.geometry.type === "LineString") {
       const latlngs = f.geometry.coordinates.map(([lon, lat]) => [lat, lon]);
       L.polyline(latlngs, {
@@ -339,6 +432,7 @@ function drawPerson(geojson) {
       return;
     }
     if (!f.geometry || f.geometry.type !== "Point") return;
+    if (kind === "coverage_cell") return;
     const p = f.properties;
     events.push(p.event);
     const [lon, lat] = f.geometry.coordinates;
@@ -366,10 +460,67 @@ function drawPerson(geojson) {
   });
 
   renderLegend(events);
-  renderTimeline(currentFeatures);
+  renderTimeline(currentFeatures.filter(f => f.geometry && f.geometry.type === "Point" && (f.properties || {}).kind !== "coverage_cell"));
+  applyLayerToggles();
   if (points.length) {
     map.fitBounds(points, { padding: [36, 36], maxZoom: 12 });
   }
+}
+
+function applyLayerToggles() {
+  const showEllipses = document.getElementById("ellipses").checked;
+  const showHeat = document.getElementById("heat").checked;
+  if (showEllipses) {
+    if (!map.hasLayer(ellipseLayer)) map.addLayer(ellipseLayer);
+  } else if (map.hasLayer(ellipseLayer)) {
+    map.removeLayer(ellipseLayer);
+  }
+  if (showHeat) {
+    if (!map.hasLayer(coverageLayer)) map.addLayer(coverageLayer);
+  } else if (map.hasLayer(coverageLayer)) {
+    map.removeLayer(coverageLayer);
+  }
+}
+
+function renderDoeLeads(payload) {
+  const root = document.getElementById("doeLeads");
+  if (!payload || !payload.leads || !payload.leads.length) {
+    root.innerHTML = payload && payload.doe_match === false ? "" :
+      (payload && payload.mode_hidden ? "" : "");
+    if (payload && payload.leads && payload.leads.length === 0 && payload.boundary) {
+      root.innerHTML = `<h3>Doe compatibility leads</h3><p class="note">${payload.boundary}</p><p class="note">No ranked leads above the investigate floor. Hit ≠ ID.</p>`;
+    }
+    return;
+  }
+  const cards = payload.leads.map(lead => {
+    const rows = (lead.fields || []).map(f => `
+      <tr>
+        <th>${f.field}</th>
+        <td class="st-${f.status}">${f.status}</td>
+        <td>${f.subject || "—"} → ${f.notice || "—"}</td>
+      </tr>`).join("");
+    return `<article class="lead-card" data-notice="${lead.notice_id || ""}">
+      <div class="score">${lead.rank_score} · ${lead.label_band || "lead"}</div>
+      <div class="title">${lead.label || lead.notice_id}</div>
+      <div class="meta">${lead.event_class || ""} · ${lead.jurisdiction || ""}</div>
+      <table>${rows}</table>
+      <p class="note">${lead.next_verification || ""}</p>
+      <p class="warn-mini">${lead.warning || "Compatibility lead only — never an identification."}</p>
+    </article>`;
+  }).join("");
+  root.innerHTML = `<h3>Doe compatibility leads</h3>
+    <p class="note">${payload.boundary || "Doe hit ≠ ID."}</p>
+    ${cards}`;
+  root.querySelectorAll(".lead-card").forEach(card => {
+    card.style.cursor = "pointer";
+    card.addEventListener("click", () => {
+      const id = card.dataset.notice;
+      const feat = currentFeatures.find(f => f.properties && f.properties.pin_id === id);
+      if (feat && feat.geometry && feat.geometry.type === "Point") {
+        focusPin(id);
+      }
+    });
+  });
 }
 
 async function loadModes() {
@@ -447,20 +598,39 @@ async function loadSelected() {
     `/api/people/${encodeURIComponent(id)}/geojson?mode=${encodeURIComponent(mode)}`
   );
   drawPerson(geojson);
+  try {
+    const cov = await fetchJSON(`/api/people/${encodeURIComponent(id)}/coverage`);
+    drawCoverage(cov.geojson || cov);
+  } catch (err) {
+    coverageLayer.clearLayers();
+    document.getElementById("coverageNote").textContent =
+      "Heat = search coverage intensity / negative-evidence weight — not a probability of presence.";
+  }
   if (mode === "all") {
     renderModeFlags({ mode_id: "all" });
     renderQueries(null);
+    document.getElementById("doeLeads").innerHTML = "";
   } else {
     const q = await fetchJSON(
       `/api/people/${encodeURIComponent(id)}/queries?mode=${encodeURIComponent(mode)}`
     );
     renderModeFlags(q);
     renderQueries(q);
+    if (mode === "doe_cold" || mode === "cold_missing") {
+      const leads = await fetchJSON(
+        `/api/people/${encodeURIComponent(id)}/doe-match`
+      );
+      renderDoeLeads(leads);
+    } else {
+      document.getElementById("doeLeads").innerHTML = "";
+    }
   }
 }
 
 document.getElementById("person").addEventListener("change", loadSelected);
 document.getElementById("mode").addEventListener("change", loadSelected);
+document.getElementById("ellipses").addEventListener("change", applyLayerToggles);
+document.getElementById("heat").addEventListener("change", applyLayerToggles);
 document.getElementById("fit").addEventListener("click", () => {
   const pts = currentFeatures
     .filter(f => f.geometry && f.geometry.type === "Point")
@@ -562,13 +732,39 @@ def make_handler(state: MapState) -> type[BaseHTTPRequestHandler]:
                     self._json(200, {"mode_id": "all", "queries": []})
                     return
                 name = case.display_name.split("(")[0].strip()
+                desc = case.descriptor or {}
                 payload = render_queries(
                     mode,
                     name=name,
                     aliases=name,
-                    jurisdiction=case.pins[0].jurisdiction if case.pins else "US",
+                    jurisdiction=desc.get("jurisdiction")
+                    or (case.pins[0].jurisdiction if case.pins else "US"),
+                    age_band=str(desc.get("age_band") or "20-30"),
+                    sex=str(desc.get("sex") or ""),
+                    year_from=str(desc.get("time_window_from") or "1990")[:4],
+                    year_to=str(desc.get("time_window_to") or "1999")[:4],
+                    distinguishing_marks=str(desc.get("scars_marks") or ""),
+                    height_band=str(desc.get("height_band") or desc.get("height_cm") or ""),
                 )
                 self._json(200, payload)
+                return
+
+            if path.startswith("/api/people/") and path.endswith("/doe-match"):
+                subject_id = path[len("/api/people/") : -len("/doe-match")]
+                case = state.cases.get(subject_id)
+                if case is None:
+                    self._json(404, {"error": "unknown subject"})
+                    return
+                self._json(200, match_subject(case))
+                return
+
+            if path.startswith("/api/people/") and path.endswith("/coverage"):
+                subject_id = path[len("/api/people/") : -len("/coverage")]
+                case = state.cases.get(subject_id)
+                if case is None:
+                    self._json(404, {"error": "unknown subject"})
+                    return
+                self._json(200, coverage_report(case))
                 return
 
             if path.startswith("/api/people/") and path.endswith("/pins"):

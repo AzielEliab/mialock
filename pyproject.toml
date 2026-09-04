@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mialock"
-version = "0.1.0"
-description = "M.I.A.Lock: purpose-bound missing-person event map and archive/Doe search options. Historical pins only. Doe leads ≠ ID. (Aziel Eliab, 2026)."
+version = "0.1.1"
+description = "M.I.A.Lock: purpose-bound missing-person event map, Doe descriptor matching, uncertainty ellipses, and coverage-heat layers. Historical pins only. Doe leads ≠ ID. (Aziel Eliab, 2026)."
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [{name = "Aziel Eliab"}]
@@ -40,7 +40,7 @@ mialock = "mialock.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/AzielEliab/mialock"
-Download = "https://mialock-download-tracker.vibelock.workers.dev/download?asset=mialock-0.1.0.tar.gz"
+Download = "https://mialock-download-tracker.vibelock.workers.dev/download?asset=mialock-0.1.1.tar.gz"
 Issues = "https://github.com/AzielEliab/mialock/issues"
 Counted-downloads = "https://mialock-download-tracker.vibelock.workers.dev/"
 Catalog = "https://aziel-runtime.vibelock.workers.dev/p/mialock/"

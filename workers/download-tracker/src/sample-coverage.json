@@ -1,0 +1,43 @@
+{
+  "framing": "Heat = search coverage intensity / negative-evidence weight — not a probability of presence.",
+  "people": {
+    "subj-elena-cold-demo": [
+      {
+        "cell_id": "ev-cov-cook-doe",
+        "source_id": "adapter.doe.unidentified_cold",
+        "lat": 41.7508,
+        "lon": -87.7136,
+        "radius_m": 14000,
+        "jurisdiction": "US-IL-COOK",
+        "event_classes": ["jane_doe_notice", "unidentified_remains"],
+        "coverage_estimate": 0.8,
+        "result": "searched",
+        "intensity": 0.8
+      },
+      {
+        "cell_id": "ev-cov-mke-doe-deadend",
+        "source_id": "adapter.doe.unidentified_cold",
+        "lat": 43.0389,
+        "lon": -87.9065,
+        "radius_m": 13000,
+        "jurisdiction": "US-WI-MILWAUKEE",
+        "event_classes": ["jane_doe_notice", "john_doe_notice"],
+        "coverage_estimate": 0.66,
+        "result": "zero_compatible_hits",
+        "intensity": 0.66
+      },
+      {
+        "cell_id": "ev-cov-champaign-low",
+        "source_id": "adapter.archive.newspaper_backfiles",
+        "lat": 40.1164,
+        "lon": -88.2434,
+        "radius_m": 16000,
+        "jurisdiction": "US-IL-CHAMPAIGN",
+        "event_classes": ["library_digital_collection"],
+        "coverage_estimate": 0.22,
+        "result": "low_coverage",
+        "intensity": 0.22
+      }
+    ]
+  }
+}

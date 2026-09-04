@@ -1,0 +1,217 @@
+{
+  "framing": "Heat = search coverage intensity / negative-evidence weight — not a probability of presence.",
+  "people": {
+    "subj-christina-demo": [
+      {
+        "cell_id": "cg-cov-jail",
+        "source_id": "adapter.jail.county_inmate_search",
+        "lat": 41.8299,
+        "lon": -87.7431,
+        "radius_m": 9000,
+        "jurisdiction": "US-IL-COOK",
+        "event_classes": ["arrest", "booking", "custody", "release"],
+        "coverage_estimate": 0.82,
+        "result": "searched",
+        "intensity": 0.82,
+        "time_window": "2026-08",
+        "note": "County jail roster searched; municipal lockups may be uncovered."
+      },
+      {
+        "cell_id": "cg-cov-court",
+        "source_id": "adapter.court.state_public_docket",
+        "lat": 41.8847,
+        "lon": -87.6322,
+        "radius_m": 8000,
+        "jurisdiction": "US-IL",
+        "event_classes": ["court_filing", "hearing", "disposition"],
+        "coverage_estimate": 0.75,
+        "result": "searched",
+        "intensity": 0.75,
+        "time_window": "2026-08"
+      },
+      {
+        "cell_id": "cg-cov-missing",
+        "source_id": "adapter.missing.namus_public",
+        "lat": 41.8781,
+        "lon": -87.6298,
+        "radius_m": 14000,
+        "jurisdiction": "US-IL-COOK",
+        "event_classes": ["missing_person_notice", "unidentified_remains"],
+        "coverage_estimate": 0.7,
+        "result": "searched",
+        "intensity": 0.7,
+        "time_window": "2026-08"
+      },
+      {
+        "cell_id": "cg-cov-news",
+        "source_id": "adapter.news.local_crime_missing",
+        "lat": 41.85,
+        "lon": -87.65,
+        "radius_m": 16000,
+        "jurisdiction": "US-IL",
+        "event_classes": ["news_crime_report", "news_missing_report"],
+        "coverage_estimate": 0.48,
+        "result": "searched",
+        "intensity": 0.48,
+        "time_window": "2026-08"
+      },
+      {
+        "cell_id": "cg-cov-obit-deadend",
+        "source_id": "adapter.obit.regional_notices",
+        "lat": 41.9,
+        "lon": -87.68,
+        "radius_m": 12000,
+        "jurisdiction": "US-IL-COOK",
+        "event_classes": ["obituary", "death_notice"],
+        "coverage_estimate": 0.68,
+        "result": "zero_compatible_hits",
+        "intensity": 0.68,
+        "time_window": "2026-08",
+        "note": "Dead-end certificate: reachable corpus searched, zero compatible hits."
+      },
+      {
+        "cell_id": "cg-cov-discovery-low",
+        "source_id": "adapter.discovery.web_search",
+        "lat": 41.82,
+        "lon": -87.61,
+        "radius_m": 20000,
+        "jurisdiction": "US",
+        "event_classes": ["discovery_lead"],
+        "coverage_estimate": 0.18,
+        "result": "low_coverage",
+        "intensity": 0.18,
+        "note": "Sparse discovery tier — absence is unknown, not informative."
+      }
+    ],
+    "subj-jordan-demo": [
+      {
+        "cell_id": "jh-cov-mke-missing",
+        "source_id": "adapter.missing.namus_public",
+        "lat": 43.0389,
+        "lon": -87.9065,
+        "radius_m": 12000,
+        "jurisdiction": "US-WI-MILWAUKEE",
+        "event_classes": ["missing_person_notice"],
+        "coverage_estimate": 0.72,
+        "result": "searched",
+        "intensity": 0.72
+      },
+      {
+        "cell_id": "jh-cov-winnebago-arrest",
+        "source_id": "adapter.jail.county_inmate_search",
+        "lat": 42.2711,
+        "lon": -89.094,
+        "radius_m": 10000,
+        "jurisdiction": "US-IL-WINNEBAGO",
+        "event_classes": ["arrest", "booking"],
+        "coverage_estimate": 0.64,
+        "result": "searched",
+        "intensity": 0.64
+      },
+      {
+        "cell_id": "jh-cov-kane-obit-deadend",
+        "source_id": "adapter.obit.regional_notices",
+        "lat": 41.7606,
+        "lon": -88.3201,
+        "radius_m": 14000,
+        "jurisdiction": "US-IL-KANE",
+        "event_classes": ["obituary"],
+        "coverage_estimate": 0.6,
+        "result": "zero_compatible_hits",
+        "intensity": 0.6,
+        "note": "High-enough coverage that zero hits is negative evidence, not presence probability."
+      },
+      {
+        "cell_id": "jh-cov-mke-archive-low",
+        "source_id": "adapter.archive.newspaper_backfiles",
+        "lat": 43.02,
+        "lon": -87.92,
+        "radius_m": 18000,
+        "jurisdiction": "US-WI-MILWAUKEE",
+        "event_classes": ["archive_crime_report", "newspaper_archive_hit"],
+        "coverage_estimate": 0.22,
+        "result": "low_coverage",
+        "intensity": 0.22
+      }
+    ],
+    "subj-elena-cold-demo": [
+      {
+        "cell_id": "ev-cov-cook-doe",
+        "source_id": "adapter.doe.unidentified_cold",
+        "lat": 41.7508,
+        "lon": -87.7136,
+        "radius_m": 14000,
+        "jurisdiction": "US-IL-COOK",
+        "event_classes": ["jane_doe_notice", "unidentified_remains", "cold_case_unidentified"],
+        "coverage_estimate": 0.8,
+        "result": "searched",
+        "intensity": 0.8,
+        "time_window": "1994-1996",
+        "note": "Doe / unidentified clearinghouse actually queried."
+      },
+      {
+        "cell_id": "ev-cov-cook-me",
+        "source_id": "adapter.me.county_doe",
+        "lat": 41.76,
+        "lon": -87.7,
+        "radius_m": 10000,
+        "jurisdiction": "US-IL-COOK",
+        "event_classes": ["unidentified_remains", "medical_examiner_case"],
+        "coverage_estimate": 0.74,
+        "result": "searched",
+        "intensity": 0.74
+      },
+      {
+        "cell_id": "ev-cov-cook-archive",
+        "source_id": "adapter.archive.newspaper_backfiles",
+        "lat": 41.8781,
+        "lon": -87.6298,
+        "radius_m": 16000,
+        "jurisdiction": "US-IL-COOK",
+        "event_classes": ["newspaper_archive_hit", "archive_missing_report"],
+        "coverage_estimate": 0.55,
+        "result": "searched",
+        "intensity": 0.55
+      },
+      {
+        "cell_id": "ev-cov-champaign-low",
+        "source_id": "adapter.archive.newspaper_backfiles",
+        "lat": 40.1164,
+        "lon": -88.2434,
+        "radius_m": 16000,
+        "jurisdiction": "US-IL-CHAMPAIGN",
+        "event_classes": ["library_digital_collection"],
+        "coverage_estimate": 0.22,
+        "result": "low_coverage",
+        "intensity": 0.22,
+        "note": "Sparse library digital only — absence is unknown."
+      },
+      {
+        "cell_id": "ev-cov-mke-doe-deadend",
+        "source_id": "adapter.doe.unidentified_cold",
+        "lat": 43.0389,
+        "lon": -87.9065,
+        "radius_m": 13000,
+        "jurisdiction": "US-WI-MILWAUKEE",
+        "event_classes": ["jane_doe_notice", "john_doe_notice"],
+        "coverage_estimate": 0.66,
+        "result": "zero_compatible_hits",
+        "intensity": 0.66,
+        "note": "Dead-end certificate for Milwaukee Doe pages in the time window."
+      },
+      {
+        "cell_id": "ev-cov-vital-failed",
+        "source_id": "adapter.vital.death_index",
+        "lat": 41.9,
+        "lon": -87.62,
+        "radius_m": 18000,
+        "jurisdiction": "US-IL",
+        "event_classes": ["vital_death_index"],
+        "coverage_estimate": 0.0,
+        "result": "failed",
+        "intensity": 0.08,
+        "note": "Adapter failed; visible coverage gap."
+      }
+    ]
+  }
+}

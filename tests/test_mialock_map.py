@@ -53,6 +53,37 @@ def test_geojson_is_per_person_and_includes_path():
     if len(points) >= 2:
         lines = [f for f in geo["features"] if f["geometry"]["type"] == "LineString"]
         assert lines
+    ellipses = [
+        f
+        for f in geo["features"]
+        if f["geometry"]["type"] == "Polygon"
+        and (f["properties"] or {}).get("kind") == "uncertainty_ellipse"
+    ]
+    assert ellipses, "sample pins must emit uncertainty ellipses"
+    for feat in ellipses:
+        props = feat["properties"]
+        assert props["semi_major_m"] >= props["semi_minor_m"]
+        assert props["semi_major_m"] > 0
+        assert "location" in " ".join(props.get("sources") or []) or props.get("sources")
+        ring = feat["geometry"]["coordinates"][0]
+        assert len(ring) >= 8
+        assert ring[0] == ring[-1]
+
+
+def test_sample_pins_include_explicit_uncertainty_fields():
+    cases = load_casebook()
+    measured = [
+        p
+        for c in cases
+        for p in c.pins
+        if p.location_uncertainty_m or p.uncertainty_semi_major_m
+    ]
+    assert len(measured) >= 6
+    elena = next(c for c in cases if c.subject_id == "subj-elena-cold-demo")
+    jane = next(p for p in elena.pins if p.pin_id == "ev-3")
+    assert jane.uncertainty_semi_major_m == 3200
+    assert jane.uncertainty_semi_minor_m == 1900
+    assert jane.doe_descriptor.get("sex") == "female"
 
 
 def test_map_handler_people_and_geojson(tmp_path):
@@ -85,6 +116,13 @@ def test_map_handler_people_and_geojson(tmp_path):
         html = res3.read().decode()
         assert res3.status == 200
         assert "date × time × event × duration" in html
+        assert "Uncertainty ellipses" in html
+        assert "Coverage heat" in html
+        conn.request("GET", f"/api/people/{sid}/geojson?mode=all")
+        res4 = conn.getresponse()
+        geo2 = json.loads(res4.read().decode())
+        assert res4.status == 200
+        assert geo2["properties"]["ellipse_count"] >= 1
         conn.close()
     finally:
         httpd.shutdown()
