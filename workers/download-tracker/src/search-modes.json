@@ -1,0 +1,285 @@
+{
+  "active": {
+    "mode_id": "active",
+    "title": "Active missing-person search",
+    "summary": "Current registries, bookings, courts, news, and obituaries.",
+    "cold_case": false,
+    "doe_match": false,
+    "archive": false,
+    "event_classes": [
+      "missing_person_notice",
+      "missing_person_update",
+      "arrest",
+      "booking",
+      "custody",
+      "court_filing",
+      "hearing",
+      "obituary",
+      "news_missing_report",
+      "news_crime_report",
+      "discovery_lead"
+    ],
+    "adapter_families": [
+      "missing_registries",
+      "jail_booking",
+      "courts",
+      "news_current",
+      "obituaries",
+      "discovery"
+    ],
+    "query_families": [
+      {
+        "family_id": "active-missing",
+        "title": "Active missing notices",
+        "event_classes": [
+          "missing_person_notice",
+          "missing_person_update"
+        ],
+        "template": "(\"{name}\" OR {aliases}) {jurisdiction} (missing OR \"endangered missing\" OR \"last seen\")",
+        "notes": ""
+      },
+      {
+        "family_id": "active-booking",
+        "title": "Arrest / booking",
+        "event_classes": [
+          "arrest",
+          "booking",
+          "custody"
+        ],
+        "template": "(\"{name}\" OR {aliases}) {jurisdiction} (arrest OR booking OR inmate OR jail OR custody)",
+        "notes": ""
+      },
+      {
+        "family_id": "active-court",
+        "title": "Court dockets",
+        "event_classes": [
+          "court_filing",
+          "hearing",
+          "disposition"
+        ],
+        "template": "(\"{name}\" OR {aliases}) {jurisdiction} (court OR docket OR hearing OR charged)",
+        "notes": ""
+      }
+    ]
+  },
+  "archives": {
+    "mode_id": "archives",
+    "title": "Archive & old newspaper / publishing search",
+    "summary": "Historical newspapers, library digital collections, periodical clippings, and published archives for older mentions.",
+    "cold_case": false,
+    "doe_match": false,
+    "archive": true,
+    "event_classes": [
+      "newspaper_archive_hit",
+      "historical_publication",
+      "periodical_clipping",
+      "library_digital_collection",
+      "archive_missing_report",
+      "archive_crime_report",
+      "archive_obituary",
+      "news_missing_report",
+      "news_crime_report",
+      "obituary",
+      "discovery_lead"
+    ],
+    "adapter_families": [
+      "newspaper_archives",
+      "library_digital",
+      "periodical_indexes",
+      "publishing_archives",
+      "genealogy_news_clips",
+      "discovery"
+    ],
+    "query_families": [
+      {
+        "family_id": "archive-newspapers",
+        "title": "Old newspapers",
+        "event_classes": [
+          "newspaper_archive_hit",
+          "archive_missing_report",
+          "archive_crime_report"
+        ],
+        "template": "(\"{name}\" OR {aliases}) ({year_from}-{year_to} OR {decade}) (newspaper OR \"news archive\" OR \"from the archives\" OR microfilm) {jurisdiction} (missing OR arrested OR court OR homicide OR unidentified)",
+        "notes": "Prefer library/digital-archive adapters; publication date \u2260 event date."
+      },
+      {
+        "family_id": "archive-publishing",
+        "title": "Books / magazines / published notices",
+        "event_classes": [
+          "historical_publication",
+          "periodical_clipping"
+        ],
+        "template": "(\"{name}\" OR {aliases}) (magazine OR periodical OR gazette OR \"police gazette\" OR pamphlet OR \"true crime\" OR yearbook) {jurisdiction_or_region}",
+        "notes": ""
+      },
+      {
+        "family_id": "archive-library",
+        "title": "Library digital collections",
+        "event_classes": [
+          "library_digital_collection",
+          "newspaper_archive_hit"
+        ],
+        "template": "(\"{name}\" OR {aliases}) (\"digital collection\" OR \"chronicling america\" OR \"newspaper archive\" OR \"historical newspapers\") {jurisdiction}",
+        "notes": ""
+      },
+      {
+        "family_id": "archive-obits",
+        "title": "Archived obituaries / death notices",
+        "event_classes": [
+          "archive_obituary",
+          "obituary",
+          "death_notice"
+        ],
+        "template": "(\"{name}\" OR {aliases}) (obituary OR \"death notice\" OR \"passed away\") ({year_from} OR {year_to} OR archive) {jurisdiction_or_region}",
+        "notes": ""
+      }
+    ]
+  },
+  "doe_cold": {
+    "mode_id": "doe_cold",
+    "title": "Cold case \u2014 John Doe / Jane Doe unidentified",
+    "summary": "Match a missing subject against unidentified remains and public Doe notices (John Doe / Jane Doe / Unknown). Demographic compatibility only \u2014 never auto-identify.",
+    "cold_case": true,
+    "doe_match": true,
+    "archive": false,
+    "event_classes": [
+      "unidentified_remains",
+      "john_doe_notice",
+      "jane_doe_notice",
+      "cold_case_unidentified",
+      "medical_examiner_case",
+      "cold_case_missing",
+      "news_identification",
+      "archive_crime_report",
+      "newspaper_archive_hit",
+      "public_tip_or_release"
+    ],
+    "adapter_families": [
+      "namus_unidentified",
+      "me_doe_pages",
+      "cold_case_public",
+      "newspaper_archives",
+      "news_current"
+    ],
+    "query_families": [
+      {
+        "family_id": "doe-jane",
+        "title": "Jane Doe notices",
+        "event_classes": [
+          "jane_doe_notice",
+          "unidentified_remains",
+          "cold_case_unidentified"
+        ],
+        "template": "(\"Jane Doe\" OR \"unidentified female\" OR \"unidentified woman\" OR \"unknown female\") {jurisdiction} ({age_band} OR {sex} OR {date_window} OR {distinguishing_marks})",
+        "notes": "Score as compatibility lead only; no auto-merge to named subject."
+      },
+      {
+        "family_id": "doe-john",
+        "title": "John Doe notices",
+        "event_classes": [
+          "john_doe_notice",
+          "unidentified_remains",
+          "cold_case_unidentified"
+        ],
+        "template": "(\"John Doe\" OR \"unidentified male\" OR \"unidentified man\" OR \"unknown male\") {jurisdiction} ({age_band} OR {sex} OR {date_window} OR {distinguishing_marks})",
+        "notes": "Score as compatibility lead only; no auto-merge to named subject."
+      },
+      {
+        "family_id": "doe-namus",
+        "title": "Unidentified remains clearinghouses",
+        "event_classes": [
+          "unidentified_remains",
+          "medical_examiner_case",
+          "cold_case_unidentified"
+        ],
+        "template": "(unidentified OR \"NamUs\" OR \"Doe\") {jurisdiction} ({age_band} OR {estimated_year_of_death} OR {hair} OR {height_band})",
+        "notes": ""
+      },
+      {
+        "family_id": "doe-archive-clips",
+        "title": "Archive Doe / unidentified clippings",
+        "event_classes": [
+          "newspaper_archive_hit",
+          "archive_crime_report",
+          "cold_case_unidentified"
+        ],
+        "template": "(\"Jane Doe\" OR \"John Doe\" OR unidentified) {jurisdiction} ({year_from}-{year_to}) (body OR remains OR discovered OR homicide)",
+        "notes": ""
+      },
+      {
+        "family_id": "doe-id-news",
+        "title": "Later identification stories",
+        "event_classes": [
+          "news_identification",
+          "public_tip_or_release"
+        ],
+        "template": "(\"identified as\" OR \"previously known as\" OR \"Jane Doe identified\" OR \"John Doe identified\") {jurisdiction} ({name} OR {aliases} OR {date_window})",
+        "notes": ""
+      }
+    ]
+  },
+  "cold_missing": {
+    "mode_id": "cold_missing",
+    "title": "Cold case \u2014 long-term missing",
+    "summary": "Long-horizon missing notices plus archives, Doe options, and historical crime/publishing searches.",
+    "cold_case": true,
+    "doe_match": true,
+    "archive": true,
+    "event_classes": [
+      "cold_case_missing",
+      "missing_person_notice",
+      "newspaper_archive_hit",
+      "archive_missing_report",
+      "historical_publication",
+      "john_doe_notice",
+      "jane_doe_notice",
+      "unidentified_remains",
+      "cold_case_unidentified",
+      "archive_obituary",
+      "vital_death_index"
+    ],
+    "adapter_families": [
+      "missing_registries",
+      "newspaper_archives",
+      "library_digital",
+      "namus_unidentified",
+      "me_doe_pages",
+      "cold_case_public",
+      "obituaries"
+    ],
+    "query_families": [
+      {
+        "family_id": "cold-missing-registry",
+        "title": "Long-term missing registries",
+        "event_classes": [
+          "cold_case_missing",
+          "missing_person_notice"
+        ],
+        "template": "(\"{name}\" OR {aliases}) (missing OR \"cold case\" OR \"still missing\" OR \"unsolved missing\") {jurisdiction} ({year_from} OR {last_seen_year})",
+        "notes": ""
+      },
+      {
+        "family_id": "cold-archive-name",
+        "title": "Name in historical newspapers",
+        "event_classes": [
+          "newspaper_archive_hit",
+          "archive_missing_report",
+          "historical_publication"
+        ],
+        "template": "(\"{name}\" OR {aliases}) ({year_from}-{year_to}) (missing OR vanished OR \"last seen\" OR disappeared) {jurisdiction_or_region}",
+        "notes": ""
+      },
+      {
+        "family_id": "cold-cross-doe",
+        "title": "Cross-match Doe notices in window",
+        "event_classes": [
+          "jane_doe_notice",
+          "john_doe_notice",
+          "unidentified_remains"
+        ],
+        "template": "(\"Jane Doe\" OR \"John Doe\" OR unidentified) {jurisdiction} ({age_band}) ({year_from}-{year_to})",
+        "notes": "Enable when cold-case Doe option is selected."
+      }
+    ]
+  }
+}

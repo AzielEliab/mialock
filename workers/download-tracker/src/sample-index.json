@@ -1,0 +1,38 @@
+{
+  "boundary": "Historical documented events with date \u00d7 time \u00d7 event \u00d7 duration. Not live tracking.",
+  "people": [
+    {
+      "subject_id": "subj-christina-demo",
+      "display_name": "Christina Green (demo)",
+      "summary": "Synthetic missing-person timeline across Cook County public-record style events.",
+      "case_kind": "active",
+      "pin_count": 6,
+      "span": {
+        "start": "2019-03-12T00:00:00-05:00",
+        "end": "2026-08-20T00:00:00-05:00"
+      }
+    },
+    {
+      "subject_id": "subj-jordan-demo",
+      "display_name": "Jordan Hale (demo)",
+      "summary": "Synthetic multi-jurisdiction path: last-seen Wisconsin \u2192 Illinois court \u2192 obituary lead.",
+      "case_kind": "active",
+      "pin_count": 5,
+      "span": {
+        "start": "1998-06-18T00:00:00-05:00",
+        "end": "2026-01-14T00:00:00-06:00"
+      }
+    },
+    {
+      "subject_id": "subj-elena-cold-demo",
+      "display_name": "Elena Vargas (cold-case demo)",
+      "summary": "Synthetic cold missing case with Jane Doe compatibility leads and old newspaper archive hits.",
+      "case_kind": "cold_missing",
+      "pin_count": 7,
+      "span": {
+        "start": "1994-09-02T22:15:00-05:00",
+        "end": "2018-08-14T00:00:00-05:00"
+      }
+    }
+  ]
+}
