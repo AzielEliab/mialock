@@ -31,6 +31,13 @@ def _duration_seconds(start: datetime, end: datetime | None, explicit: int | Non
     return max(0, int((end - start).total_seconds()))
 
 
+def _opt_float(raw: dict[str, Any], key: str) -> float | None:
+    value = raw.get(key)
+    if value in (None, ""):
+        return None
+    return float(value)
+
+
 @dataclass(frozen=True)
 class EventPin:
     """One documented historical presence point for a subject."""
@@ -50,6 +57,13 @@ class EventPin:
     place_name: str = ""
     notes: str = ""
     source_tier: str = "discovery"
+    location_uncertainty_m: float | None = None
+    uncertainty_semi_major_m: float | None = None
+    uncertainty_semi_minor_m: float | None = None
+    uncertainty_bearing_deg: float = 0.0
+    jurisdiction_footprint_m: float | None = None
+    time_window_geo_soft_m: float | None = None
+    doe_descriptor: dict[str, Any] = field(default_factory=dict)
 
     @property
     def date_str(self) -> str:
@@ -95,6 +109,14 @@ class EventPin:
                 "verification_state": self.verification_state,
                 "source_tier": self.source_tier,
                 "notes": self.notes,
+                "kind": "event_pin",
+                "location_uncertainty_m": self.location_uncertainty_m,
+                "uncertainty_semi_major_m": self.uncertainty_semi_major_m,
+                "uncertainty_semi_minor_m": self.uncertainty_semi_minor_m,
+                "uncertainty_bearing_deg": self.uncertainty_bearing_deg,
+                "jurisdiction_footprint_m": self.jurisdiction_footprint_m,
+                "time_window_geo_soft_m": self.time_window_geo_soft_m,
+                "doe_descriptor": dict(self.doe_descriptor or {}),
             },
         }
 
@@ -122,6 +144,13 @@ class EventPin:
             place_name=str(raw.get("place_name") or ""),
             notes=str(raw.get("notes") or ""),
             source_tier=str(raw.get("source_tier") or "discovery"),
+            location_uncertainty_m=_opt_float(raw, "location_uncertainty_m"),
+            uncertainty_semi_major_m=_opt_float(raw, "uncertainty_semi_major_m"),
+            uncertainty_semi_minor_m=_opt_float(raw, "uncertainty_semi_minor_m"),
+            uncertainty_bearing_deg=float(raw.get("uncertainty_bearing_deg") or 0.0),
+            jurisdiction_footprint_m=_opt_float(raw, "jurisdiction_footprint_m"),
+            time_window_geo_soft_m=_opt_float(raw, "time_window_geo_soft_m"),
+            doe_descriptor=dict(raw.get("doe_descriptor") or {}),
         )
 
 
@@ -132,6 +161,8 @@ class PersonCase:
     summary: str = ""
     case_kind: str = "active"
     pins: list[EventPin] = field(default_factory=list)
+    descriptor: dict[str, Any] = field(default_factory=dict)
+    coverage: list[dict[str, Any]] = field(default_factory=list)
 
     def sorted_pins(self) -> list[EventPin]:
         return sorted(self.pins, key=lambda p: p.start_at)
@@ -141,9 +172,29 @@ class PersonCase:
 
         return filter_pins_by_mode(self.sorted_pins(), mode_id)
 
-    def to_geojson(self, mode_id: str = "all") -> dict[str, Any]:
+    def to_geojson(
+        self,
+        mode_id: str = "all",
+        *,
+        include_ellipses: bool = True,
+        include_coverage: bool = False,
+    ) -> dict[str, Any]:
+        from mialock.uncertainty import ellipse_feature, pin_has_uncertainty
+
         pins = self.pins_for_mode(mode_id)
         features = [p.to_map_feature() for p in pins]
+        ellipse_count = 0
+        if include_ellipses:
+            for p in pins:
+                if pin_has_uncertainty(p):
+                    features.append(ellipse_feature(p))
+                    ellipse_count += 1
+        if include_coverage:
+            from mialock.coverage import coverage_feature, cells_for_case
+
+            for cell in cells_for_case(self):
+                if cell.get("lat") is not None and cell.get("lon") is not None:
+                    features.append(coverage_feature(cell, subject_id=self.subject_id))
         line_coords = [[p.lon, p.lat] for p in pins if p.verification_state != "rejected"]
         if len(line_coords) >= 2:
             features.append(
@@ -166,7 +217,12 @@ class PersonCase:
                 "case_kind": self.case_kind,
                 "search_mode": mode_id,
                 "pin_count": len(pins),
-                "boundary": "Historical documented events. Not live tracking.",
+                "ellipse_count": ellipse_count,
+                "descriptor": dict(self.descriptor or {}),
+                "boundary": (
+                    "Historical documented events with uncertainty ellipses. "
+                    "Not live tracking. Coverage heat is search intensity, not presence."
+                ),
             },
             "features": features,
         }
@@ -177,6 +233,8 @@ class PersonCase:
             "display_name": self.display_name,
             "summary": self.summary,
             "case_kind": self.case_kind,
+            "descriptor": dict(self.descriptor or {}),
+            "coverage": list(self.coverage or []),
             "pins": [asdict(p) | {
                 "start_at": p.start_at.isoformat(),
                 "end_at": p.end_at.isoformat() if p.end_at else None,
@@ -198,6 +256,8 @@ class PersonCase:
             summary=str(raw.get("summary") or ""),
             case_kind=str(raw.get("case_kind") or "active"),
             pins=pins,
+            descriptor=dict(raw.get("descriptor") or {}),
+            coverage=list(raw.get("coverage") or []),
         )
 
 

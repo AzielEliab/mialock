@@ -10,5 +10,8 @@ GET `/download` increments **downloads**.
 `/v1` never increments DOWNLOADS KV.
 GET `/install.sh` one-click install (does not increment; script curls `/download`).
 GET `/v1/skill` returns skill markdown (`text/markdown`). Does not increment views or downloads.
+GET/POST `/v1/doe-match` ranks Doe notices as compatibility leads (never an ID).
+GET `/v1/coverage` returns a sample coverage report (heat ≠ presence).
+Asset: `mialock-0.1.1.tar.gz`.
 
 Host: https://mialock-download-tracker.vibelock.workers.dev

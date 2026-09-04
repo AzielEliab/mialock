@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 
 from mialock import __version__
+from mialock.coverage import coverage_report
+from mialock.doe import Descriptor, match_descriptors, match_subject
 from mialock.map_ui import DEFAULT_HOST, DEFAULT_PORT, serve
 from mialock.models import casebook_index, load_casebook
 from mialock.search_options import list_search_modes, render_queries
@@ -18,7 +20,8 @@ def main(argv: list[str] | None = None) -> int:
         prog="mialock",
         description=(
             "M.I.A.Lock — per-person historical event map "
-            "(date × time × event × duration) plus archive / Doe cold-case search options."
+            "(date × time × event × duration), Doe descriptor matching, "
+            "uncertainty ellipses, and coverage-heat layers."
         ),
     )
     parser.add_argument("--version", action="version", version=f"mialock {__version__}")
@@ -46,6 +49,18 @@ def main(argv: list[str] | None = None) -> int:
         help="Search mode filter: all|active|archives|doe_cold|cold_missing",
     )
     geo_p.add_argument("-o", "--output", type=Path, default=None)
+    geo_p.add_argument(
+        "--ellipses",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Include uncertainty ellipse polygons (default: yes)",
+    )
+    geo_p.add_argument(
+        "--coverage",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Include coverage-heat cells in the GeoJSON",
+    )
 
     sub.add_parser(
         "search-options",
@@ -64,6 +79,36 @@ def main(argv: list[str] | None = None) -> int:
     q_p.add_argument("--year-to", default="1999")
     q_p.add_argument("--age-band", default="20-30")
     q_p.add_argument("--sex", default="female")
+
+    doe_p = sub.add_parser(
+        "doe-match",
+        help="Rank Doe / unidentified notices as compatibility leads (never an ID)",
+    )
+    doe_p.add_argument("--casebook", type=Path, default=None)
+    doe_p.add_argument("--subject", default="", help="Subject id in the casebook")
+    doe_p.add_argument("--notices", type=Path, default=None, help="Extra notices JSON")
+    doe_p.add_argument(
+        "--no-sample-notices",
+        action="store_true",
+        help="Do not merge packaged sample_doe_notices.json",
+    )
+    doe_p.add_argument("--age-band", default="")
+    doe_p.add_argument("--sex", default="")
+    doe_p.add_argument("--height-cm", default="")
+    doe_p.add_argument("--height-band", default="")
+    doe_p.add_argument("--build", default="")
+    doe_p.add_argument("--scars-marks", default="")
+    doe_p.add_argument("--clothing", default="")
+    doe_p.add_argument("--jurisdiction", default="")
+    doe_p.add_argument("--time-from", default="")
+    doe_p.add_argument("--time-to", default="")
+
+    cov_p = sub.add_parser(
+        "coverage",
+        help="Adapter coverage report (search intensity / dead-ends — not presence)",
+    )
+    cov_p.add_argument("--casebook", type=Path, default=None)
+    cov_p.add_argument("--subject", default="", help="Subject id (default: all)")
 
     args = parser.parse_args(argv)
 
@@ -90,6 +135,69 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(payload, indent=2))
         return 0
 
+    if args.cmd == "doe-match":
+        overrides = {
+            "age_band": args.age_band,
+            "sex": args.sex,
+            "height_cm": args.height_cm,
+            "height_band": args.height_band,
+            "build": args.build,
+            "scars_marks": args.scars_marks,
+            "clothing": args.clothing,
+            "jurisdiction": args.jurisdiction,
+            "time_window_from": args.time_from,
+            "time_window_to": args.time_to,
+        }
+        if args.subject:
+            cases = load_casebook(args.casebook)
+            match = next((c for c in cases if c.subject_id == args.subject), None)
+            if match is None:
+                print(f"unknown subject: {args.subject}", file=sys.stderr)
+                return 1
+            if any(overrides.values()):
+                merged = dict(match.descriptor or {})
+                merged.update({k: v for k, v in overrides.items() if v})
+                match.descriptor = merged
+            payload = match_subject(
+                match,
+                include_sample_notices=not args.no_sample_notices,
+                notices_path=args.notices,
+            )
+        else:
+            from mialock.doe import load_sample_notices
+
+            subject = Descriptor.from_mapping(overrides)
+            notices = load_sample_notices(args.notices)
+            if not notices:
+                print("no Doe notices to match (pass --subject or --notices)", file=sys.stderr)
+                return 1
+            payload = match_descriptors(subject, notices)
+        print(json.dumps(payload, indent=2))
+        return 0
+
+    if args.cmd == "coverage":
+        cases = load_casebook(args.casebook)
+        if args.subject:
+            match = next((c for c in cases if c.subject_id == args.subject), None)
+            if match is None:
+                print(f"unknown subject: {args.subject}", file=sys.stderr)
+                return 1
+            print(json.dumps(coverage_report(match), indent=2))
+            return 0
+        print(
+            json.dumps(
+                {
+                    "framing": (
+                        "Heat = search coverage intensity / negative-evidence weight — "
+                        "not a probability of presence."
+                    ),
+                    "reports": [coverage_report(c) for c in cases],
+                },
+                indent=2,
+            )
+        )
+        return 0
+
     cases = load_casebook(args.casebook)
     if args.cmd == "people":
         print(json.dumps(casebook_index(cases), indent=2))
@@ -100,7 +208,14 @@ def main(argv: list[str] | None = None) -> int:
         if match is None:
             print(f"unknown subject: {args.subject_id}", file=sys.stderr)
             return 1
-        payload = json.dumps(match.to_geojson(args.mode), indent=2)
+        payload = json.dumps(
+            match.to_geojson(
+                args.mode,
+                include_ellipses=args.ellipses,
+                include_coverage=args.coverage,
+            ),
+            indent=2,
+        )
         if args.output:
             args.output.write_text(payload + "\n", encoding="utf-8")
         else:

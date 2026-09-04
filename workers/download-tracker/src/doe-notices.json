@@ -1,0 +1,57 @@
+{
+  "boundary": "Synthetic Doe / unidentified notices for descriptor-match demos. Compatibility leads only — never identification.",
+  "notices": [
+    {
+      "notice_id": "doe-cook-jane-marks",
+      "label": "Cook County Jane Doe — marks-compatible (demo)",
+      "event_class": "jane_doe_notice",
+      "age_band": "20-28",
+      "sex": "female",
+      "height_cm": 164,
+      "build": "slim",
+      "scars_marks": "tattoo left wrist",
+      "clothing": "red jacket",
+      "time_window_from": "1995-03-01",
+      "time_window_to": "1995-04-15",
+      "jurisdiction": "US-IL-COOK"
+    },
+    {
+      "notice_id": "doe-milwaukee-jane-partial",
+      "label": "Milwaukee Jane Doe — age/sex only (demo)",
+      "event_class": "jane_doe_notice",
+      "age_band": "20-30",
+      "sex": "female",
+      "height_cm": 170,
+      "build": "medium",
+      "time_window_from": "1994-10-01",
+      "time_window_to": "1995-02-01",
+      "jurisdiction": "US-WI-MILWAUKEE"
+    },
+    {
+      "notice_id": "doe-champaign-jane-age-mismatch",
+      "label": "Champaign Jane Doe — age mismatch (demo)",
+      "event_class": "jane_doe_notice",
+      "age_band": "45-55",
+      "sex": "female",
+      "height_cm": 160,
+      "build": "heavy",
+      "scars_marks": "scar right knee",
+      "clothing": "blue coat",
+      "time_window_from": "1996-01-01",
+      "time_window_to": "1996-03-01",
+      "jurisdiction": "US-IL-CHAMPAIGN"
+    },
+    {
+      "notice_id": "doe-cook-john-sex-mismatch",
+      "label": "Cook County John Doe — sex mismatch (demo)",
+      "event_class": "john_doe_notice",
+      "age_band": "25-35",
+      "sex": "male",
+      "height_cm": 178,
+      "build": "medium",
+      "time_window_from": "1995-04-01",
+      "time_window_to": "1995-04-20",
+      "jurisdiction": "US-IL-COOK"
+    }
+  ]
+}

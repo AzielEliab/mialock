@@ -42,9 +42,21 @@ Adapters should cover (ToS-compliant / licensed access):
 | `medical_examiner_case` | Public ME case summary |
 | `news_identification` | Later “identified as…” reporting |
 
-**Hard rule:** Doe hits are **compatibility leads** (age band, sex, jurisdiction,
-date window, distinguishing marks). Never auto-merge a Doe record into a named
-subject fingerprint. Confirmation requires an authoritative identification process.
+**Hard rule:** Doe hits are **compatibility leads** (age band, sex, height/build,
+scars/marks, clothing, time window, jurisdiction). Never auto-merge a Doe record
+into a named subject fingerprint. Confirmation requires an authoritative
+identification process.
+
+### Descriptor matching
+
+`python -m mialock doe-match --subject subj-elena-cold-demo` (also
+`--age-band`, `--sex`, `--height-cm`, `--scars-marks`, `--clothing`,
+`--jurisdiction`, `--time-from`, `--time-to`).
+
+Output is **ranked compatibility leads only**: an uncalibrated rank score plus
+field-level match / mismatch / unknown. Hard sex conflicts are excluded from the
+lead list. Hosted toolkit: `GET/POST /v1/doe-match`. On the map, choose
+`doe_cold` to see lead cards and the match breakdown.
 
 ## Query examples
 
@@ -74,3 +86,5 @@ Milwaukee (25-35 OR male OR 2025)
 
 In the person event map, choose **Search mode** to filter pins and show the
 query families for that mode. Archive and Doe pins use distinct colors.
+`doe_cold` also shows descriptor-match lead cards. Toggle **Uncertainty ellipses**
+and **Coverage heat** (coverage = search intensity / negative evidence — not presence).

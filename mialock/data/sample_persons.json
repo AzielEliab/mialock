@@ -5,6 +5,17 @@
       "subject_id": "subj-christina-demo",
       "display_name": "Christina Green (demo)",
       "summary": "Synthetic missing-person timeline across Cook County public-record style events.",
+      "descriptor": {
+        "age_band": "30-36",
+        "sex": "female",
+        "height_cm": 168,
+        "build": "medium",
+        "scars_marks": "",
+        "clothing": "black coat",
+        "time_window_from": "2026-08-01",
+        "time_window_to": "2026-08-31",
+        "jurisdiction": "US-IL-COOK"
+      },
       "pins": [
         {
           "pin_id": "cg-1",
@@ -19,7 +30,11 @@
           "geo_confidence": 0.55,
           "verification_state": "probable",
           "source_tier": "authoritative_public",
-          "notes": "Family report; place approximate."
+          "notes": "Family report; place approximate.",
+          "location_uncertainty_m": 2200,
+          "jurisdiction_footprint_m": 18000,
+          "time_window_geo_soft_m": 900,
+          "uncertainty_bearing_deg": 40
         },
         {
           "pin_id": "cg-2",
@@ -34,7 +49,13 @@
           "geo_confidence": 0.9,
           "verification_state": "unverified",
           "source_tier": "authoritative_public",
-          "notes": "Candidate booking — identity not confirmed."
+          "notes": "Candidate booking — identity not confirmed.",
+          "location_uncertainty_m": 350,
+          "jurisdiction_footprint_m": 4000,
+          "time_window_geo_soft_m": 200,
+          "uncertainty_semi_major_m": 480,
+          "uncertainty_semi_minor_m": 280,
+          "uncertainty_bearing_deg": 12
         },
         {
           "pin_id": "cg-3",
@@ -48,7 +69,11 @@
           "jurisdiction": "US-IL-COOK",
           "geo_confidence": 0.85,
           "verification_state": "unverified",
-          "source_tier": "authoritative_public"
+          "source_tier": "authoritative_public",
+          "location_uncertainty_m": 450,
+          "jurisdiction_footprint_m": 4000,
+          "time_window_geo_soft_m": 220,
+          "uncertainty_bearing_deg": 8
         },
         {
           "pin_id": "cg-4",
@@ -63,7 +88,10 @@
           "geo_confidence": 0.88,
           "verification_state": "unverified",
           "source_tier": "authoritative_public",
-          "notes": "Multi-day custody duration from roster window."
+          "notes": "Multi-day custody duration from roster window.",
+          "location_uncertainty_m": 350,
+          "jurisdiction_footprint_m": 4000,
+          "time_window_geo_soft_m": 400
         },
         {
           "pin_id": "cg-5",
@@ -77,7 +105,11 @@
           "geo_confidence": 0.25,
           "verification_state": "unverified",
           "source_tier": "independent_reporting",
-          "notes": "Low geo confidence; duration unknown (instant pin)."
+          "notes": "Low geo confidence; duration unknown (instant pin).",
+          "location_uncertainty_m": 16000,
+          "jurisdiction_footprint_m": 22000,
+          "time_window_geo_soft_m": 6000,
+          "uncertainty_bearing_deg": 55
         },
         {
           "pin_id": "cg-6",
@@ -91,7 +123,11 @@
           "geo_confidence": 0.3,
           "verification_state": "unverified",
           "source_tier": "archive",
-          "notes": "Publication date only; not an event date."
+          "notes": "Publication date only; not an event date.",
+          "location_uncertainty_m": 18000,
+          "jurisdiction_footprint_m": 22000,
+          "time_window_geo_soft_m": 8000,
+          "uncertainty_bearing_deg": 30
         }
       ]
     },
@@ -99,6 +135,17 @@
       "subject_id": "subj-jordan-demo",
       "display_name": "Jordan Hale (demo)",
       "summary": "Synthetic multi-jurisdiction path: last-seen Wisconsin → Illinois court → obituary lead.",
+      "descriptor": {
+        "age_band": "25-40",
+        "sex": "male",
+        "height_cm": 180,
+        "build": "medium",
+        "scars_marks": "",
+        "clothing": "",
+        "time_window_from": "2025-11-03",
+        "time_window_to": "2026-01-14",
+        "jurisdiction": "US-WI-MILWAUKEE"
+      },
       "pins": [
         {
           "pin_id": "jh-1",
@@ -112,7 +159,11 @@
           "jurisdiction": "US-WI-MILWAUKEE",
           "geo_confidence": 0.6,
           "verification_state": "probable",
-          "source_tier": "authoritative_public"
+          "source_tier": "authoritative_public",
+          "location_uncertainty_m": 1800,
+          "jurisdiction_footprint_m": 16000,
+          "time_window_geo_soft_m": 700,
+          "uncertainty_bearing_deg": 18
         },
         {
           "pin_id": "jh-2",
@@ -126,7 +177,10 @@
           "jurisdiction": "US-IL-WINNEBAGO",
           "geo_confidence": 0.7,
           "verification_state": "unverified",
-          "source_tier": "authoritative_public"
+          "source_tier": "authoritative_public",
+          "location_uncertainty_m": 2500,
+          "jurisdiction_footprint_m": 14000,
+          "time_window_geo_soft_m": 500
         },
         {
           "pin_id": "jh-3",
@@ -140,7 +194,10 @@
           "jurisdiction": "US-IL-WINNEBAGO",
           "geo_confidence": 0.8,
           "verification_state": "unverified",
-          "source_tier": "authoritative_public"
+          "source_tier": "authoritative_public",
+          "location_uncertainty_m": 600,
+          "jurisdiction_footprint_m": 5000,
+          "time_window_geo_soft_m": 250
         },
         {
           "pin_id": "jh-4",
@@ -154,7 +211,11 @@
           "geo_confidence": 0.35,
           "verification_state": "unverified",
           "source_tier": "death_remembrance",
-          "notes": "Outcome-class lead only; not confirmed identity."
+          "notes": "Outcome-class lead only; not confirmed identity.",
+          "location_uncertainty_m": 14000,
+          "jurisdiction_footprint_m": 20000,
+          "time_window_geo_soft_m": 7000,
+          "uncertainty_bearing_deg": 48
         },
         {
           "pin_id": "jh-5",
@@ -168,7 +229,10 @@
           "geo_confidence": 0.28,
           "verification_state": "unverified",
           "source_tier": "archive",
-          "notes": "Archive publishing hit; publication date typed separately from any crime date."
+          "notes": "Archive publishing hit; publication date typed separately from any crime date.",
+          "location_uncertainty_m": 17000,
+          "jurisdiction_footprint_m": 20000,
+          "time_window_geo_soft_m": 9000
         }
       ]
     },
@@ -177,6 +241,18 @@
       "display_name": "Elena Vargas (cold-case demo)",
       "summary": "Synthetic cold missing case with Jane Doe compatibility leads and old newspaper archive hits.",
       "case_kind": "cold_missing",
+      "descriptor": {
+        "age_band": "20-30",
+        "sex": "female",
+        "height_cm": 165,
+        "height_band": "160-170",
+        "build": "slim",
+        "scars_marks": "tattoo left wrist",
+        "clothing": "red jacket",
+        "time_window_from": "1994-09-02",
+        "time_window_to": "1995-12-31",
+        "jurisdiction": "US-IL-COOK"
+      },
       "pins": [
         {
           "pin_id": "ev-1",
@@ -191,7 +267,11 @@
           "geo_confidence": 0.5,
           "verification_state": "probable",
           "source_tier": "authoritative_public",
-          "notes": "Long-horizon missing anchor."
+          "notes": "Long-horizon missing anchor.",
+          "location_uncertainty_m": 4000,
+          "jurisdiction_footprint_m": 20000,
+          "time_window_geo_soft_m": 1200,
+          "uncertainty_bearing_deg": 28
         },
         {
           "pin_id": "ev-2",
@@ -205,7 +285,10 @@
           "geo_confidence": 0.35,
           "verification_state": "unverified",
           "source_tier": "archive",
-          "notes": "Publication date from archive OCR."
+          "notes": "Publication date from archive OCR.",
+          "location_uncertainty_m": 15000,
+          "jurisdiction_footprint_m": 22000,
+          "time_window_geo_soft_m": 8000
         },
         {
           "pin_id": "ev-3",
@@ -220,7 +303,24 @@
           "geo_confidence": 0.65,
           "verification_state": "unverified",
           "source_tier": "authoritative_public",
-          "notes": "Age/sex/jurisdiction compatible only — NOT an identification."
+          "notes": "Age/sex/jurisdiction compatible only — NOT an identification.",
+          "location_uncertainty_m": 2800,
+          "uncertainty_semi_major_m": 3200,
+          "uncertainty_semi_minor_m": 1900,
+          "uncertainty_bearing_deg": 55,
+          "jurisdiction_footprint_m": 16000,
+          "time_window_geo_soft_m": 900,
+          "doe_descriptor": {
+            "age_band": "22-28",
+            "sex": "female",
+            "height_cm": 163,
+            "build": "slim",
+            "scars_marks": "tattoo left wrist",
+            "clothing": "dark jacket",
+            "time_window_from": "1995-03-15",
+            "time_window_to": "1995-04-03",
+            "jurisdiction": "US-IL-COOK"
+          }
         },
         {
           "pin_id": "ev-4",
@@ -234,7 +334,19 @@
           "geo_confidence": 0.7,
           "verification_state": "unverified",
           "source_tier": "authoritative_public",
-          "notes": "Linked Doe family; still unverified vs subject."
+          "notes": "Linked Doe family; still unverified vs subject.",
+          "location_uncertainty_m": 2500,
+          "jurisdiction_footprint_m": 16000,
+          "time_window_geo_soft_m": 800,
+          "doe_descriptor": {
+            "age_band": "18-30",
+            "sex": "female",
+            "height_cm": 168,
+            "build": "medium",
+            "time_window_from": "1995-04-03",
+            "time_window_to": "1995-04-03",
+            "jurisdiction": "US-IL-COOK"
+          }
         },
         {
           "pin_id": "ev-5",
@@ -247,7 +359,11 @@
           "jurisdiction": "US-IL-CHAMPAIGN",
           "geo_confidence": 0.22,
           "verification_state": "unverified",
-          "source_tier": "archive"
+          "source_tier": "archive",
+          "location_uncertainty_m": 20000,
+          "jurisdiction_footprint_m": 24000,
+          "time_window_geo_soft_m": 9000,
+          "uncertainty_bearing_deg": 62
         },
         {
           "pin_id": "ev-6",
@@ -261,7 +377,19 @@
           "geo_confidence": 0.4,
           "verification_state": "rejected",
           "source_tier": "authoritative_public",
-          "notes": "Shown to illustrate Doe option + contradiction reject."
+          "notes": "Shown to illustrate Doe option + contradiction reject.",
+          "location_uncertainty_m": 8000,
+          "jurisdiction_footprint_m": 18000,
+          "time_window_geo_soft_m": 4000,
+          "doe_descriptor": {
+            "age_band": "25-40",
+            "sex": "male",
+            "height_cm": 178,
+            "build": "medium",
+            "time_window_from": "2012-11-05",
+            "time_window_to": "2012-11-05",
+            "jurisdiction": "US-IL-COOK"
+          }
         },
         {
           "pin_id": "ev-7",
@@ -274,7 +402,10 @@
           "jurisdiction": "US-IL-COOK",
           "geo_confidence": 0.2,
           "verification_state": "unverified",
-          "source_tier": "archive"
+          "source_tier": "archive",
+          "location_uncertainty_m": 22000,
+          "jurisdiction_footprint_m": 22000,
+          "time_window_geo_soft_m": 10000
         }
       ]
     }
