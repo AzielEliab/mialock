@@ -33,6 +33,25 @@ Open http://127.0.0.1:8765/ — toggle **Uncertainty ellipses** and **Coverage h
 
 Survival mesh for downloaded software: https://azieltether-download-tracker.vibelock.workers.dev/
 
+## iPhone & Android
+
+Flutter sources: [`mobile/`](mobile/). Application id
+`com.azieeliab.mialock`. Screens call the hosted Worker
+(`/v1/map`, `/v1/search-options`, `/v1/queries`, `/v1/doe-match`,
+`/v1/coverage`). Doe hits are compatibility leads — never an
+identification. Coverage heat ≠ presence. Not a store listing.
+Not a separate repo. Worker UI stays on the download tracker.
+
+```bash
+cd mobile
+flutter create --org com.azieeliab --project-name mialock .
+flutter pub get
+flutter run
+```
+
+Open `android/` in Android Studio, or `ios/Runner.xcworkspace` in Xcode
+after `flutter create`. This tree does not ship store IPAs.
+
 ## Everblooming sigil
 
 Visual brand mark only. Public identity remains Aziel Eliab.
