@@ -11,4 +11,12 @@ id = "e397d1a7e84049ce94dadb6189b94fdc"
 [assets]
 directory = "./public"
 binding = "ASSETS"
+# /v1/* covers local /v1/{op} and /v1/mesh/* (AZIEL_RUNTIME proxy).
 run_worker_first = ["/", "/download", "/download/*", "/stats", "/event", "/go", "/count", "/install.sh", "/v1", "/v1/*", "/openapi.json", "/ai", "/ai/*", "/mcp", "/mcp/", "/robots.txt", "/sitemap.xml", "/cite.json", "/robots.txt/", "/sitemap.xml/", "/cite.json/", "/llms.txt", "/llms.txt/", "/ai.txt", "/ai.txt/"]
+
+[vars]
+AZIEL_RUNTIME_ORIGIN = "https://aziel-runtime.vibelock.workers.dev"
+
+[[services]]
+binding = "AZIEL_RUNTIME"
+service = "aziel-runtime"
