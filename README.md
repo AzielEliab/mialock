@@ -25,9 +25,11 @@ Open http://127.0.0.1:8765/ — toggle **Uncertainty ellipses** and **Coverage h
 ## AI / skill
 
 - Skill: https://mialock-download-tracker.vibelock.workers.dev/v1/skill
+- Suite mesh proxy: [https://mialock-download-tracker.vibelock.workers.dev/v1/mesh](https://mialock-download-tracker.vibelock.workers.dev/v1/mesh) — default OFF; QNM live / locked / isolated
 - OpenAPI: https://mialock-download-tracker.vibelock.workers.dev/openapi.json
 - Toolkit ops: `doe-match`, `coverage`, `queries`, `search-options`, `map`
 - Catalog: https://aziel-runtime.vibelock.workers.dev/p/mialock/
+- Catalog MCP: `POST https://aziel-runtime.vibelock.workers.dev/mcp`. Suite mesh `/v1/mesh/*` PROXY via `AZIEL_RUNTIME` (default OFF; QNM-BUILD-1.0 live|locked|isolated; no Node Gate). Catalog MCP `mesh_*` + FragGate `slug=mesh`.
 
 ## AzielTether
 

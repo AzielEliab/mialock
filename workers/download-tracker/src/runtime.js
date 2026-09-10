@@ -2,8 +2,10 @@
  * M.I.A.Lock hosted runtime.
  * Hosted /v1 never touches DOWNLOADS KV.
  * Map / search-options / queries are hosted stubs. Live Leaflet map is local CLI.
+ * /v1/mesh/* PROXY to aziel-runtime via AZIEL_RUNTIME (handled in index.js before this catch-all).
  * Author: Aziel Eliab.
  */
+import { meshOpenApiPaths, meshPointer } from "./mesh.js";
 import SEARCH_MODES from "./search-modes.json";
 import SAMPLE_INDEX from "./sample-index.json";
 import SAMPLE_COVERAGE from "./sample-coverage.json";
@@ -39,7 +41,7 @@ const EXAMPLE_PAYLOAD = {
 
 const SKILL = `---
 name: M.I.A.Lock
-description: Use when mapping documented missing-person events (date × time × event × duration), ranking Doe descriptor compatibility leads, reading adapter coverage reports, or describing map layers (uncertainty ellipses + coverage heat). Purpose-bound investigative use. Doe hit ≠ ID. Coverage heat ≠ presence. Hosted /v1 via this Worker or aziel-runtime. Author Aziel Eliab.
+description: Use when mapping documented missing-person events (date × time × event × duration), ranking Doe descriptor compatibility leads, reading adapter coverage reports, or describing map layers (uncertainty ellipses + coverage heat). Purpose-bound investigative use. Doe hit ≠ ID. Coverage heat ≠ presence. Dual surface: Worker /v1 + catalog MCP. This Worker /v1/mesh/* PROXY to aziel-runtime via AZIEL_RUNTIME. Suite mesh default OFF. QNM-BUILD-1.0 live|locked|isolated. No Node Gate. No auto-heal. Not anonymity. Author Aziel Eliab.
 ---
 
 # M.I.A.Lock
@@ -68,6 +70,9 @@ Host: \`https://mialock-download-tracker.vibelock.workers.dev\`
 | GET/POST | \`/v1/queries\` | Render query families for a mode. Search plans only. Doe leads ≠ ID. |
 | GET/POST | \`/v1/doe-match\` | Rank Doe / unidentified notices vs a named-subject descriptor. Compatibility leads only with score + field match/mismatch. Never an ID. |
 | GET | \`/v1/coverage\` | Sample adapter coverage report + heat cells. Heat = search intensity / negative evidence — not presence. |
+| GET | \`/v1/mesh\` | PROXY suite mesh status. Default OFF. QNM live|locked|isolated. Never enables. |
+| GET | \`/v1/mesh/nodes\` | PROXY Live Nodes roster (5-minute presence). |
+| POST | \`/v1/mesh/{enable,disable,join,heartbeat,leave,broadcast}\` | PROXY. Bearer required to enable. No auto-heal. Anon-broadcast is not a publish path. |
 
 OpenAPI: \`https://mialock-download-tracker.vibelock.workers.dev/openapi.json\`
 
@@ -92,6 +97,7 @@ curl -s -A 'Mozilla/5.0' -X POST https://mialock-download-tracker.vibelock.worke
   -d '{"age_band":"20-30","sex":"female","height_cm":165,"build":"slim","scars_marks":"tattoo left wrist","clothing":"red jacket","jurisdiction":"US-IL-COOK","time_window_from":"1994-09-02","time_window_to":"1995-12-31"}'
 curl -s -A 'Mozilla/5.0' https://mialock-download-tracker.vibelock.workers.dev/v1/coverage?subject=subj-elena-cold-demo
 curl -s -A 'Mozilla/5.0' https://mialock-download-tracker.vibelock.workers.dev/v1/skill
+curl -s -A 'Mozilla/5.0' https://mialock-download-tracker.vibelock.workers.dev/v1/mesh
 \`\`\`
 
 Grok: import this OpenAPI as a custom tool. ChatGPT: GPT Actions. Venice: HTTP tools. Toolkit ops: \`doe-match\`, \`coverage\`, \`queries\`, \`search-options\`, \`map\` (local layers described here).
@@ -129,6 +135,7 @@ Author: **Aziel Eliab**. Honest scope: purpose-bound missing-person event map. D
 - This Worker skill: \`GET https://mialock-download-tracker.vibelock.workers.dev/v1/skill\`
 - This Worker OpenAPI: https://mialock-download-tracker.vibelock.workers.dev/openapi.json
 - Sample payload: \`GET https://mialock-download-tracker.vibelock.workers.dev/v1/example\`
+- Suite mesh: \`GET https://mialock-download-tracker.vibelock.workers.dev/v1/mesh\` PROXY (default OFF)
 - AzielTether: https://azieltether-download-tracker.vibelock.workers.dev/v1/skill
 
 Counted download (gzip HTTP 200, no 302): https://mialock-download-tracker.vibelock.workers.dev/download?asset=mialock-0.1.1.tar.gz
@@ -138,8 +145,8 @@ GitHub: https://github.com/AzielEliab/mialock
 function corsHeaders() {
   return {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Accept, MCP-Protocol-Version, mcp-session-id",
+    "Access-Control-Allow-Methods": "GET, POST, HEAD, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization, X-Aziel-Runtime-Token, User-Agent, MCP-Protocol-Version, mcp-session-id",
   };
 }
 
@@ -261,7 +268,8 @@ function openapiSpec() {
       version: VERSION,
       description:
         "Purpose-bound missing-person event map, Doe descriptor matching, coverage reports, and map-layer descriptions (uncertainty ellipses + coverage heat). Hosted map is a stub; live Leaflet map is local CLI mialock map. Doe hit ≠ ID. Coverage heat ≠ presence. " +
-        MOTTO,
+        MOTTO +
+        " Suite mesh /v1/mesh/* PROXY to aziel-runtime (AZIEL_RUNTIME). Default OFF. QNM-BUILD-1.0 live|locked|isolated. No Node Gate. No auto-heal. Not anonymity. Aziel Eliab only.",
     },
     servers: [{ url: HOST }],
     paths: {
@@ -386,6 +394,7 @@ function openapiSpec() {
           responses: { "200": { description: "ranked compatibility leads + excluded mismatches" } },
         },
       },
+      ...meshOpenApiPaths(),
       "/v1/coverage": {
         get: {
           operationId: "coverage",
@@ -425,15 +434,17 @@ function aiHtml() {
   <h2>Venice</h2>
   <p>Custom HTTP tool from the same OpenAPI URL.</p>
   <h2>MCP catalog</h2>
-  <p>The shared catalog is <code>${CATALOG}/mcp</code>.</p>
+  <p>The shared catalog is <code>${CATALOG}/mcp</code> (catalog <code>mesh_*</code> + FragGate <code>slug=mesh</code>).</p>
+  <p>Suite mesh: <code>GET ${HOST}/v1/mesh</code> PROXY to aziel-runtime. Default OFF. QNM-BUILD-1.0 live|locked|isolated. No Node Gate. No auto-heal. Not anonymity. Author: Aziel Eliab only.</p>
   <p>AzielTether: <a href="${TETHER}/">${TETHER}</a></p>
-  <p><a href="/openapi.json">openapi.json</a> · <a href="/v1/health">health</a> · <a href="/">downloads</a></p>
+  <p><a href="/openapi.json">openapi.json</a> · <a href="/v1/health">health</a> · <a href="/v1/mesh">/v1/mesh</a> · <a href="/">downloads</a></p>
 </body>
 </html>`;
 }
 
 export async function handleRuntimeApi(request, url) {
   const path = url.pathname.replace(/\/+$/, "") || "/";
+  if (path === "/v1/mesh" || path.startsWith("/v1/mesh/")) return null;
   const isApi =
     path === "/v1" ||
     path.startsWith("/v1/") ||
@@ -450,6 +461,7 @@ export async function handleRuntimeApi(request, url) {
       version: VERSION,
       motto: MOTTO,
       note: "Purpose-bound missing-person investigative use. Doe leads ≠ ID. Not live tracking. Hosted /v1 does not increment downloads.",
+      mesh: meshPointer(),
     });
   }
 
@@ -589,5 +601,5 @@ export async function handleRuntimeApi(request, url) {
     });
   }
 
-  return json({ error: "not found" }, 404);
+  return json({ error: "not found", hint: "GET /v1/health GET /v1/skill GET /v1/map GET /v1/mesh" }, 404);
 }

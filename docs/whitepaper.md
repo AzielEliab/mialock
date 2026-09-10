@@ -795,6 +795,12 @@ Success is not measured by pages crawled. It is measured by whether the system
 reliably raises the correct record above same-name noise, explains why, surfaces
 coverage gaps, and exposes enough provenance for a human to verify the lead.
 
+The Worker homepage shows a suite Live Nodes strip. `/v1/mesh/*` PROXY
+to aziel-runtime. Suite mesh default OFF. QNM rollup is
+live|locked|isolated counts only. No Node Gate. No auto-heal. Not an
+anonymity network. Anon-broadcast is not a publish path. M.I.A.Lock
+remains purpose-bound missing-person investigative software. Doe hit ≠ ID.
+
 ---
 
 ## 25. Conclusion
