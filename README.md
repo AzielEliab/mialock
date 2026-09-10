@@ -25,11 +25,11 @@ Open http://127.0.0.1:8765/ — toggle **Uncertainty ellipses** and **Coverage h
 ## AI / skill
 
 - Skill: https://mialock-download-tracker.vibelock.workers.dev/v1/skill
-- Suite mesh proxy: [https://mialock-download-tracker.vibelock.workers.dev/v1/mesh](https://mialock-download-tracker.vibelock.workers.dev/v1/mesh) — default OFF; QNM live / locked / isolated
+- Suite mesh proxy: [https://mialock-download-tracker.vibelock.workers.dev/v1/mesh](https://mialock-download-tracker.vibelock.workers.dev/v1/mesh) — default OFF; QNM live / locked / isolated; QNS-CD-1.0 (photon QNS1 packet transfer) hub cite / Worker mesh cross-map only
 - OpenAPI: https://mialock-download-tracker.vibelock.workers.dev/openapi.json
 - Toolkit ops: `doe-match`, `coverage`, `queries`, `search-options`, `map`
 - Catalog: https://aziel-runtime.vibelock.workers.dev/p/mialock/
-- Catalog MCP: `POST https://aziel-runtime.vibelock.workers.dev/mcp`. Suite mesh `/v1/mesh/*` PROXY via `AZIEL_RUNTIME` (default OFF; QNM-BUILD-1.0 live|locked|isolated; no Node Gate). Catalog MCP `mesh_*` + FragGate `slug=mesh`.
+- Catalog MCP: `POST https://aziel-runtime.vibelock.workers.dev/mcp`. Suite mesh `/v1/mesh/*` PROXY via `AZIEL_RUNTIME` (default OFF; QNM-BUILD-1.0 live|locked|isolated; QNS-CD-1.0 cross-map; no Node Gate; no public qnsd proxy). Catalog MCP `mesh_*` + FragGate `slug=mesh`. Local qnsd is [qnm-node](https://github.com/AzielEliab/qnm-node). Runtime cites live in [aziel-runtime](https://github.com/AzielEliab/aziel-runtime). AZInterface has pair custody. Not a Softwares-tab product.
 
 ## AzielTether
 

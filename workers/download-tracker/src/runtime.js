@@ -41,7 +41,7 @@ const EXAMPLE_PAYLOAD = {
 
 const SKILL = `---
 name: M.I.A.Lock
-description: Use when mapping documented missing-person events (date × time × event × duration), ranking Doe descriptor compatibility leads, reading adapter coverage reports, or describing map layers (uncertainty ellipses + coverage heat). Purpose-bound investigative use. Doe hit ≠ ID. Coverage heat ≠ presence. Dual surface: Worker /v1 + catalog MCP. This Worker /v1/mesh/* PROXY to aziel-runtime via AZIEL_RUNTIME. Suite mesh default OFF. QNM-BUILD-1.0 live|locked|isolated. No Node Gate. No auto-heal. Not anonymity. Author Aziel Eliab.
+description: Use when mapping documented missing-person events (date × time × event × duration), ranking Doe descriptor compatibility leads, reading adapter coverage reports, or describing map layers (uncertainty ellipses + coverage heat). Purpose-bound investigative use. Doe hit ≠ ID. Coverage heat ≠ presence. Dual surface: Worker /v1 + catalog MCP. This Worker /v1/mesh/* PROXY to aziel-runtime via AZIEL_RUNTIME. Suite mesh default OFF. QNM-BUILD-1.0 live|locked|isolated. QNS-CD-1.0 photon QNS1 packet transfer is a hub cite / Worker mesh cross-map only (local qnsd in qnm-node; no public qnsd proxy). No Node Gate. No auto-heal. Not anonymity. Author Aziel Eliab.
 ---
 
 # M.I.A.Lock
@@ -70,8 +70,8 @@ Host: \`https://mialock-download-tracker.vibelock.workers.dev\`
 | GET/POST | \`/v1/queries\` | Render query families for a mode. Search plans only. Doe leads ≠ ID. |
 | GET/POST | \`/v1/doe-match\` | Rank Doe / unidentified notices vs a named-subject descriptor. Compatibility leads only with score + field match/mismatch. Never an ID. |
 | GET | \`/v1/coverage\` | Sample adapter coverage report + heat cells. Heat = search intensity / negative evidence — not presence. |
-| GET | \`/v1/mesh\` | PROXY suite mesh status. Default OFF. QNM live|locked|isolated. Never enables. |
-| GET | \`/v1/mesh/nodes\` | PROXY Live Nodes roster (5-minute presence). |
+| GET | \`/v1/mesh\` | PROXY suite mesh status. Default OFF. QNM live|locked|isolated. QNS-CD-1.0 cross-map. Never enables. |
+| GET | \`/v1/mesh/nodes\` | PROXY Live Nodes roster (5-minute presence). Includes QNS-CD-1.0 cross-map. |
 | POST | \`/v1/mesh/{enable,disable,join,heartbeat,leave,broadcast}\` | PROXY. Bearer required to enable. No auto-heal. Anon-broadcast is not a publish path. |
 
 OpenAPI: \`https://mialock-download-tracker.vibelock.workers.dev/openapi.json\`
@@ -269,7 +269,7 @@ function openapiSpec() {
       description:
         "Purpose-bound missing-person event map, Doe descriptor matching, coverage reports, and map-layer descriptions (uncertainty ellipses + coverage heat). Hosted map is a stub; live Leaflet map is local CLI mialock map. Doe hit ≠ ID. Coverage heat ≠ presence. " +
         MOTTO +
-        " Suite mesh /v1/mesh/* PROXY to aziel-runtime (AZIEL_RUNTIME). Default OFF. QNM-BUILD-1.0 live|locked|isolated. No Node Gate. No auto-heal. Not anonymity. Aziel Eliab only.",
+        " Suite mesh /v1/mesh/* PROXY to aziel-runtime (AZIEL_RUNTIME). Default OFF. QNM-BUILD-1.0 live|locked|isolated. QNS-CD-1.0 photon QNS1 packet transfer is a hub cite / Worker mesh cross-map only (local qnsd in qnm-node; no public qnsd proxy). No Node Gate. No auto-heal. Not anonymity. Aziel Eliab only.",
     },
     servers: [{ url: HOST }],
     paths: {
@@ -435,7 +435,7 @@ function aiHtml() {
   <p>Custom HTTP tool from the same OpenAPI URL.</p>
   <h2>MCP catalog</h2>
   <p>The shared catalog is <code>${CATALOG}/mcp</code> (catalog <code>mesh_*</code> + FragGate <code>slug=mesh</code>).</p>
-  <p>Suite mesh: <code>GET ${HOST}/v1/mesh</code> PROXY to aziel-runtime. Default OFF. QNM-BUILD-1.0 live|locked|isolated. No Node Gate. No auto-heal. Not anonymity. Author: Aziel Eliab only.</p>
+  <p>Suite mesh: <code>GET ${HOST}/v1/mesh</code> PROXY to aziel-runtime. Default OFF. QNM-BUILD-1.0 live|locked|isolated. QNS-CD-1.0 photon QNS1 packet transfer is a hub cite / Worker mesh cross-map only (local qnsd in qnm-node; no public qnsd proxy). No Node Gate. No auto-heal. Not anonymity. Author: Aziel Eliab only.</p>
   <p>AzielTether: <a href="${TETHER}/">${TETHER}</a></p>
   <p><a href="/openapi.json">openapi.json</a> · <a href="/v1/health">health</a> · <a href="/v1/mesh">/v1/mesh</a> · <a href="/">downloads</a></p>
 </body>
