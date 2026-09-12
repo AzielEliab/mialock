@@ -54,6 +54,6 @@ flutter run
 Open `android/` in Android Studio, or `ios/Runner.xcworkspace` in Xcode
 after `flutter create`. This tree does not ship store IPAs.
 
-## Everblooming sigil
+## Rose-star brand mark
 
 Visual brand mark only. Public identity remains Aziel Eliab.

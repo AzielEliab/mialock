@@ -50,7 +50,7 @@ class _ShellPageState extends State<ShellPage> {
                 'assets/sigil.png',
                 width: 32,
                 height: 32,
-                semanticLabel: 'Everblooming sigil',
+                semanticLabel: '',
               ),
             ),
             const SizedBox(width: 10),

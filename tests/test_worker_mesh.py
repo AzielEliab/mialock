@@ -6,6 +6,7 @@ No public qnsd proxy. No Node Gate. No auto-heal. Not anonymity.
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -96,6 +97,31 @@ def test_runtime_advertises_mesh_proxy_and_pointer() -> None:
     assert "QNS-CD-1.0" in RUNTIME
     assert "No Node Gate" in RUNTIME
     assert 'path === "/v1/mesh"' in RUNTIME or 'path.startsWith("/v1/mesh/")' in RUNTIME
+
+
+ROSE_STAR_SHA256 = "af095e8b0916a7262860a53619c7110f25539988806775b1c7bff8df7b0ee848"
+BRAND_MARK = (
+    '<div class="brandrow"><img class="brandmark" src="/sigil.png" '
+    'width="40" height="40" alt="" decoding="async"></div>'
+)
+
+
+def test_home_rose_star_brandmark() -> None:
+    assert BRAND_MARK in INDEX
+    assert ".brandrow{" in INDEX
+    assert ".brandmark{" in INDEX
+    assert 'alt=""' in INDEX
+    assert "everblooming" not in INDEX.lower()
+    assert "Everblooming" not in INDEX
+    assert "Aziel Eliab" in INDEX
+    assert "everblooming" not in README.lower()
+    sigil = ROOT / "workers/download-tracker/public/sigil.png"
+    assert sigil.is_file()
+    data = sigil.read_bytes()
+    assert data[:8] == b"\x89PNG\r\n\x1a\n"
+    # Official rose-star (196×139), not the 2MB oversized mark.
+    assert len(data) == 75035
+    assert hashlib.sha256(data).hexdigest() == ROSE_STAR_SHA256
 
 
 def test_home_live_nodes_strip_no_node_gate() -> None:
