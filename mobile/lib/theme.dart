@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Dark navy + gold Material 3 theme stamped to the everblooming sigil.
+/// Dark navy + gold Material 3 theme stamped to the rose-star brand mark.
 /// No analytics.
 const Color kNavy = Color(0xFF0B1220);
 const Color kSurface = Color(0xFF141C24);

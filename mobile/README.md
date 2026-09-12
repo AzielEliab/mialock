@@ -6,7 +6,7 @@ ranking (`/v1/doe-match`). Coverage heat is search intensity — not presence.
 
 Doe hits are compatibility leads only — never an identification.
 
-Dark navy / gold. Everblooming sigil is a visual brand mark. Public
+Dark navy / gold. Rose-star is a visual brand mark. Public
 identity remains **Aziel Eliab**. No analytics. Not a store listing.
 Not a separate repo.
 
