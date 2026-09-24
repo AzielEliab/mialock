@@ -44,10 +44,11 @@ Never auto-identification. CLI: `python -m mialock doe-match --subject …`.
 
 ```bash
 pip install -e .
-python -m mialock map
+mialock
+mialock ui
 ```
 
-Open http://127.0.0.1:8765/
+Open the address it prints (http://127.0.0.1:8765/ by default). Choose a person and press **Show events**. Search mode, uncertainty ellipses, and coverage heat are under **Advanced**.
 
 Use **Search mode** for:
 
@@ -56,13 +57,15 @@ Use **Search mode** for:
 - `cold_missing` — long-term missing + archives + Doe cross-match
 
 ```bash
-python -m mialock people
-python -m mialock search-options
-python -m mialock queries doe_cold --name "Elena Vargas" --jurisdiction Illinois --age-band 20-30 --sex female
-python -m mialock doe-match --subject subj-elena-cold-demo
-python -m mialock coverage --subject subj-elena-cold-demo
-python -m mialock geojson subj-elena-cold-demo --mode doe_cold
+mialock people
+mialock search-options
+mialock queries doe_cold --name "Elena Vargas" --jurisdiction Illinois --age-band 20-30 --sex female
+mialock doe-match --subject subj-elena-cold-demo
+mialock coverage --subject subj-elena-cold-demo
+mialock geojson subj-elena-cold-demo --mode doe_cold
 ```
+
+Add `--json` for the machine payload. `python -m mialock` is the same program.
 
 See [cold-case-archives.md](cold-case-archives.md).
 

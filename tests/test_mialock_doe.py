@@ -84,6 +84,7 @@ def test_cli_descriptor_args_match_sample_notices():
     try:
         rc = main(
             [
+                "--json",
                 "doe-match",
                 "--age-band",
                 "20-30",

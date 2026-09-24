@@ -1,49 +1,65 @@
 import 'package:flutter/material.dart';
 
-/// Dark navy + gold Material 3 theme stamped to the rose-star brand mark.
-/// No analytics.
-const Color kNavy = Color(0xFF0B1220);
-const Color kSurface = Color(0xFF141C24);
+/// Paper / charcoal surfaces with an Aziel gold accent.
+/// Light and dark follow the system. No analytics.
+const Color kNavy = Color(0xFF12110E);
+const Color kSurface = Color(0xFF1C1A16);
 const Color kGold = Color(0xFFC9A227);
-const Color kGoldDim = Color(0xFF8A7219);
+const Color kPaper = Color(0xFFF7F4EE);
+const Color kPaperCard = Color(0xFFFFFDF8);
+const Color kInk = Color(0xFF1C1915);
 const Color kTeal = Color(0xFF3D9B84);
-const Color kIvory = Color(0xFFE8E0D0);
-const Color kWarn = Color(0xFFD4A574);
+const Color kIvory = Color(0xFFF3EFE6);
+const Color kWarn = Color(0xFF8A6A10);
 
-ThemeData buildAppTheme() {
-  const scheme = ColorScheme.dark(
-    brightness: Brightness.dark,
+ThemeData buildAppTheme(Brightness brightness) {
+  final dark = brightness == Brightness.dark;
+  final scheme = ColorScheme(
+    brightness: brightness,
     primary: kGold,
-    onPrimary: kNavy,
+    onPrimary: kInk,
     secondary: kTeal,
-    onSecondary: kIvory,
-    surface: kSurface,
-    onSurface: kIvory,
-    error: Color(0xFFB54A4A),
-    onError: kIvory,
+    onSecondary: dark ? kIvory : Colors.white,
+    surface: dark ? kSurface : kPaperCard,
+    onSurface: dark ? kIvory : kInk,
+    error: const Color(0xFF9A3030),
+    onError: Colors.white,
   );
   return ThemeData(
     useMaterial3: true,
-    brightness: Brightness.dark,
+    brightness: brightness,
     colorScheme: scheme,
-    scaffoldBackgroundColor: kNavy,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: kNavy,
-      foregroundColor: kGold,
+    scaffoldBackgroundColor: dark ? kNavy : kPaper,
+    focusColor: kGold,
+    splashColor: const Color(0x33C9A227),
+    appBarTheme: AppBarTheme(
+      backgroundColor: dark ? kNavy : kPaperCard,
+      foregroundColor: dark ? kIvory : kInk,
       elevation: 0,
       centerTitle: false,
     ),
     cardTheme: CardThemeData(
-      color: kSurface,
+      color: dark ? kSurface : kPaperCard,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: Color(0x33C9A227)),
+        side: BorderSide(color: dark ? const Color(0x33C9A227) : const Color(0xFFE4DCCB)),
       ),
     ),
-    navigationBarTheme: const NavigationBarThemeData(
-      backgroundColor: kNavy,
-      indicatorColor: Color(0x33C9A227),
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: dark ? kNavy : kPaperCard,
+      indicatorColor: const Color(0x33C9A227),
+    ),
+    inputDecorationTheme: const InputDecorationTheme(
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: kGold, width: 2),
+      ),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        backgroundColor: kGold,
+        foregroundColor: kInk,
+      ),
     ),
   );
 }

@@ -16,7 +16,9 @@ class MiaLockApp extends StatelessWidget {
     return MaterialApp(
       title: 'M.I.A.Lock',
       debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
+      theme: buildAppTheme(Brightness.light),
+      darkTheme: buildAppTheme(Brightness.dark),
+      themeMode: ThemeMode.system,
       home: const ShellPage(),
     );
   }
@@ -194,24 +196,14 @@ class _MapPageState extends State<MapPage> {
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Text(kMotto, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: kGold)),
+            Text(
+              'Documented events for each person — date, time, place, and duration.',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
-            Text('Author Aziel Eliab · Apache-2.0 · Forks welcome.'),
-            const SizedBox(height: 12),
-            HonestyBanner(text: '${data['boundary'] ?? kLimitation}\n$kCoverageHonesty'),
-            const SizedBox(height: 12),
             Text(
               data['note']?.toString() ??
-                  'Hosted map is a sample casebook stub. Live Leaflet map is local CLI: mialock map.',
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Uncertainty ellipses: ${layers['uncertainty_ellipses'] ?? 'location uncertainty — not live location.'}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            Text(
-              'Coverage heat: ${layers['coverage_heat'] ?? kCoverageHonesty}',
-              style: Theme.of(context).textTheme.bodySmall,
+                  'This phone view reads the sample casebook. The full map is mialock ui on your computer.',
             ),
             const SizedBox(height: 16),
             Text('Sample casebook', style: Theme.of(context).textTheme.titleMedium),
@@ -233,10 +225,32 @@ class _MapPageState extends State<MapPage> {
               const SizedBox(height: 12),
               _CoverageCard(payload: coverage!),
             ],
-            const SizedBox(height: 24),
-            const Text(
-              'Not a store listing. Not a separate app repo. '
-              'Full map is the desktop package. Worker UI stays on the download tracker.',
+            const SizedBox(height: 16),
+            ExpansionTile(
+              title: const Text('About'),
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(kLimitation),
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Uncertainty ellipses: ${layers['uncertainty_ellipses'] ?? 'drawn from the location recorded with the event.'}',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(kCoverageHonesty),
+                ),
+                const SizedBox(height: 8),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Author Aziel Eliab. The full map on a computer is mialock ui.'),
+                ),
+              ],
             ),
           ],
         );
@@ -272,13 +286,18 @@ class _PersonCard extends StatelessWidget {
               '${span['start'] ?? '—'} → ${span['end'] ?? '—'}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: kGold),
             ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: FilledButton.tonal(
-                onPressed: onCoverage,
-                child: const Text('Coverage (not presence)'),
-              ),
+            ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              title: const Text('Advanced'),
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: FilledButton.tonal(
+                    onPressed: onCoverage,
+                    child: const Text('Show search coverage'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -412,8 +431,9 @@ class _SearchPageState extends State<SearchPage> {
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            HonestyBanner(
-              text: '${snap.data!['boundary'] ?? 'Search plans only. Doe leads ≠ ID.'}',
+            Text(
+              'Write search text for a mode.',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -485,9 +505,9 @@ class _SearchPageState extends State<SearchPage> {
             ],
             if (queries != null) ...[
               const SizedBox(height: 16),
-              HonestyBanner(text: '${queries!['boundary'] ?? kDoeHonesty}'),
-              const SizedBox(height: 8),
               Text('${queries!['title'] ?? mode}', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              const Text('These are search plans to run yourself.'),
               const SizedBox(height: 8),
               for (final raw in (queries!['queries'] as List? ?? const []))
                 _QueryCard(query: Map<String, dynamic>.from(raw as Map)),
@@ -604,12 +624,12 @@ class _DoePageState extends State<DoePage> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        HonestyBanner(text: kDoeHonesty),
-        const SizedBox(height: 12),
         Text(
-          'Rank public Doe notices against a named-subject descriptor. '
-          'A hit is a lead to verify — not an ID.',
+          'Compare a description with public Doe notices.',
+          style: Theme.of(context).textTheme.titleMedium,
         ),
+        const SizedBox(height: 8),
+        const Text('A result is a lead to check with the source record.'),
         const SizedBox(height: 12),
         _field(ageBand, 'Age band'),
         _field(sex, 'Sex'),
@@ -634,11 +654,9 @@ class _DoePageState extends State<DoePage> {
         ],
         if (result != null) ...[
           const SizedBox(height: 16),
-          HonestyBanner(text: '${result!['boundary'] ?? kDoeHonesty}'),
-          const SizedBox(height: 8),
           Text(
-            '${result!['lead_count'] ?? 0} lead(s) · calibration: '
-            '${result!['calibration_status'] ?? 'uncalibrated'}',
+            '${result!['lead_count'] ?? 0} compatibility lead(s). '
+            'Check each one against the source record.',
           ),
           const SizedBox(height: 8),
           for (final raw in (result!['leads'] as List? ?? const []))
@@ -680,27 +698,16 @@ class _LeadCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                border: Border.all(color: kGold),
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: const Text('LEAD — not an ID'),
-            ),
+            const Text('Compatibility lead'),
             const SizedBox(height: 8),
             Text('${lead['label'] ?? lead['notice_id']}', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              '${lead['label_band'] ?? ''} · rank ${lead['rank_score']} · '
               '${lead['event_class'] ?? ''} · ${lead['jurisdiction'] ?? ''}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: kGold),
             ),
             const SizedBox(height: 8),
-            Text(
-              '${lead['warning'] ?? 'DO NOT INTERPRET AS CONFIRMED IDENTITY. Doe hit ≠ ID.'}',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: kWarn),
-            ),
+            const Text('Check this lead against the source record before you treat it as the person.'),
             const SizedBox(height: 8),
             for (final raw in fields)
               Text(

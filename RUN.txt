@@ -1,0 +1,9 @@
+M.I.A.Lock — Aziel Eliab
+
+1. pip install -e .
+2. mialock
+3. mialock ui
+
+Open the address it prints (http://127.0.0.1:8765/ by default).
+Choose a person and press Show events.
+Add --json when you need machine-readable output.

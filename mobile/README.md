@@ -1,21 +1,10 @@
 # M.I.A.Lock — iPhone & Android
 
-Phone shell for the hosted Worker: sample casebook (`/v1/map`), archive /
-Doe search plans (`/v1/search-options`, `/v1/queries`), and Doe descriptor
-ranking (`/v1/doe-match`). Coverage heat is search intensity — not presence.
+Phone shell for the sample casebook, search plans, and Doe leads.
 
-Doe hits are compatibility leads only — never an identification.
+**Author:** Aziel Eliab
 
-Dark navy / gold. Rose-star is a visual brand mark. Public
-identity remains **Aziel Eliab**. No analytics. Not a store listing.
-Not a separate repo.
-
-Application id: `com.azieeliab.mialock`
-
-## Open in Android Studio / Xcode
-
-The `android/` and `ios/` folders here are skeleton READMEs because
-this tree was written without the Flutter SDK on PATH.
+## Start
 
 ```bash
 cd mobile
@@ -24,18 +13,19 @@ flutter pub get
 flutter run
 ```
 
-Then open `android/` in Android Studio, or `ios/Runner.xcworkspace` in
-Xcode. This tree does not ship store IPAs.
+Application id: `com.azieeliab.mialock`
+
+## Open in Android Studio / Xcode
+
+The `android/` and `ios/` folders here are skeleton READMEs until `flutter create` runs on your machine. Then open `android/` in Android Studio, or `ios/Runner.xcworkspace` in Xcode.
 
 Always send `User-Agent: Mozilla/5.0` (the app does). Host:
 
 https://mialock-download-tracker.vibelock.workers.dev
 
-## Honest scope
+## Notes
 
-THIS IS purpose-bound missing-person investigative software — historical
-pins, search plans, and Doe compatibility leads.
-THIS IS NOT live tracking, an identification, or a store app.
+Doe results are compatibility leads. Check the source record before you treat a notice as the person. Coverage color shows how thoroughly a source was searched. The full map on a computer is `mialock ui`.
 
 ## Desktop package (counted download)
 

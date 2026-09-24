@@ -7,13 +7,10 @@ const kHost = 'https://mialock-download-tracker.vibelock.workers.dev';
 const kUserAgent = 'Mozilla/5.0';
 
 const kLimitation =
-    'THIS IS: purpose-bound missing-person investigative software — '
-    'per-person historical event maps (date × time × event × duration), '
-    'Doe descriptor matching (leads only), uncertainty ellipses, and '
-    'coverage-heat layers (search intensity — not presence). '
-    'THIS IS NOT: live location tracking, an identification, a crawler of '
-    'restricted law-enforcement systems, or automated accusation. '
-    'Doe hit ≠ ID. Author Aziel Eliab.';
+    'M.I.A.Lock shows documented events for one person: '
+    'date × time × event × duration. Doe results are compatibility leads '
+    'to check with the source record. Coverage color shows how thoroughly '
+    'a source was searched. Author Aziel Eliab.';
 
 const kMotto =
     'Search broadly. Match probabilistically. Challenge every hit. '

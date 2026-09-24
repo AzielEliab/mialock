@@ -64,7 +64,7 @@ def test_cli_and_map_coverage(tmp_path=None):
     old = sys.stdout
     sys.stdout = buf
     try:
-        rc = main(["coverage", "--subject", "subj-elena-cold-demo"])
+        rc = main(["coverage", "--subject", "subj-elena-cold-demo", "--json"])
     finally:
         sys.stdout = old
     assert rc == 0
