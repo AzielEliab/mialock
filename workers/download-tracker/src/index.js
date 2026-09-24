@@ -411,56 +411,116 @@ async function indexHtml(env) {
 </script>
 <!-- gitbaby-seo -->
 <style>
-
-.brandrow{display:flex;align-items:center;gap:12px;margin:0 0 10px}
-.brandmark{width:40px;height:40px;border-radius:10px;object-fit:cover;flex:0 0 auto;box-shadow:0 0 0 1px #d4af3733}
-
-  :root { color-scheme: dark; }
-  body { font: 16px/1.45 system-ui, sans-serif; max-width: 42rem; margin: 3rem auto; padding: 0 1.25rem 4rem; background: #0e1014; color: #e8eaef; }
-  h1 { font-size: 1.75rem; margin: 0 0 .35rem; }
-  .motto { color: #9aa3b2; margin: 0 0 1.5rem; }
-  .card { border: 1px solid #2a3140; border-radius: 12px; padding: 1.25rem 1.35rem; background: #151922; }
+  :root {
+    color-scheme: light;
+    --bg: #f3f1ea;
+    --text: #1a1d24;
+    --muted: #414858;
+    --panel: #fffcf6;
+    --line: #7d786e;
+    --gold: #6a4e0a;
+    --accent: #1a1d24;
+    --ink: #f7f5ef;
+    --focus: #0a3d91;
+    --link: #0a3d91;
+    --ok: #0d5c32;
+    --ok-bg: #e5f6ec;
+    --code: #fffdf8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg: #101318;
+      --text: #f5f6f8;
+      --muted: #c9d1dc;
+      --panel: #181d26;
+      --line: #66707e;
+      --gold: #e2c36b;
+      --accent: #f3efe3;
+      --ink: #12141a;
+      --focus: #ffd56a;
+      --link: #d5e4ff;
+      --ok: #b6ebc8;
+      --ok-bg: #163528;
+      --code: #101318;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; max-width: 100%; overflow-x: clip; background: var(--bg); color: var(--text); }
+  body { font: 16px/1.5 system-ui, "Segoe UI", sans-serif; max-width: 42rem; margin: 0 auto; padding: 1.25rem 1.15rem 2.5rem; }
+  a { color: var(--link); }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+  a.skip { position: absolute; left: 1rem; top: 0; transform: translateY(-140%); background: var(--accent); color: var(--ink); padding: .45rem .75rem; text-decoration: none; border-radius: 8px; z-index: 5; }
+  a.skip:focus-visible { transform: none; top: .6rem; }
+  .brandrow{display:flex;align-items:center;gap:12px;margin:0 0 12px}
+  .brandmark{width:40px;height:40px;border-radius:10px;object-fit:cover;flex:0 0 auto;box-shadow:0 0 0 1px var(--line)}
+  h1 { font-size: 2rem; letter-spacing: .02em; line-height: 1.15; margin: 0 0 .25rem; }
+  .motto { color: var(--gold); font-style: italic; margin: 0 0 .7rem; font-size: 1.08rem; }
+  .lede, .asset-note { color: var(--muted); margin: 0 0 1rem; }
+  .kicker { display: block; margin: 0 0 .2rem; font: 600 .68rem/1.2 ui-monospace, Menlo, Consolas, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+  a.btn.primary { display: block; width: 100%; margin: 0 0 .7rem; padding: 1.05rem 1.2rem; border: 1px solid transparent; border-radius: 9px; background: var(--accent); color: var(--ink); text-align: center; text-decoration: none; font: 700 1.25rem/1.1 ui-monospace, Menlo, Consolas, monospace; letter-spacing: .03em; cursor: pointer; }
+  a.btn.primary:hover { filter: brightness(1.08); }
+  .features { margin: 0 0 1.25rem; padding: 0 0 0 1.15rem; }
+  .features li { margin: .28rem 0; }
+  .card, #meshStrip, .cite { border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.05rem; background: var(--panel); margin: 0 0 1rem; }
+  .cite { border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; padding: 1rem 0 0; }
+  h2 { font-size: 1.12rem; margin: 0 0 .7rem; }
   .nums { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: 0 0 1rem; }
   .count { font-size: 2.2rem; font-variant-numeric: tabular-nums; font-weight: 700; margin: 0; }
-  .count span { display: block; font-size: .95rem; font-weight: 500; color: #9aa3b2; }
-  .btns { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin: 0 0 .85rem; }
-  @media (max-width: 520px) { .btns { grid-template-columns: 1fr; } }
-  a.btn, button.btn { display: block; width: 100%; box-sizing: border-box; text-align: center; font: inherit; font-size: 1.2rem; font-weight: 750; padding: 1rem 1.1rem; border-radius: 10px; border: 0; cursor: pointer; text-decoration: none; }
-  a.btn.primary { background: #e8eaef; color: #0e1014; }
-  button.btn.install { background: #c9a227; color: #14110a; }
-  button.btn.install.copied { background: #7dcf9a; color: #0e1014; }
-  .kid { font-size: 1.05rem; margin: 0 0 1rem; }
-  .meta { margin-top: 1.1rem; color: #9aa3b2; font-size: .92rem; }
-  .meta a { color: #c9d4ff; }
-  .iso { margin-top: .85rem; font-size: .85rem; color: #7d8696; }
-  .banner { border: 1px solid #5c4a1a; background: #241c0d; color: #f0d78c; padding: .85rem 1rem; border-radius: 8px; margin: 0 0 1.2rem; font-size: .92rem; }
-  pre { background: #0e1014; padding: .75rem .9rem; overflow: auto; border-radius: 8px; font-size: .82rem; }
-  code { font-size: .88rem; }
-
-  .cite { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid #2a3140; }
+  .count span { display: block; font-size: .95rem; font-weight: 500; color: var(--muted); }
+  button.btn.install { display: block; width: 100%; margin: 0 0 .85rem; padding: .9rem 1rem; border-radius: 9px; border: 1px solid var(--line); background: transparent; color: var(--text); text-align: center; font: 700 1rem/1.1 ui-monospace, Menlo, Consolas, monospace; letter-spacing: .03em; cursor: pointer; }
+  button.btn.install:hover { border-color: var(--text); }
+  button.btn.install.copied { background: var(--ok-bg); color: var(--ok); border-color: transparent; }
+  .kid { margin: 0 0 1rem; }
+  .meta, .iso, .cite p, footer.quiet { color: var(--muted); }
+  .meta { margin: .9rem 0 0; font-size: .92rem; }
+  .iso { margin: .7rem 0 0; font-size: .85rem; }
+  pre { background: var(--code); color: var(--text); padding: .75rem .9rem; border-radius: 8px; border: 1px solid var(--line); font-size: .82rem; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .92em; }
   .cite h2 { font-size: 1.05rem; margin: 0 0 .4rem; }
-  .cite p { color: #c5ccd8; font-size: .95rem; }
-  .cite a { color: #c9d4ff; }
-  #meshStrip { border: 1px solid #c9a227; border-radius: 12px; padding: .85rem 1rem; background: #151922; margin: 0 0 1.2rem; display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1rem; font-size: .88rem; color: #9aa3b2; }
-  #meshStrip .live { color: #e8eaef; }
-  #meshStrip .live b { color: #c9a227; font-size: 1.35rem; margin-right: .35rem; }
-  #meshStrip .rollup b { color: #c9a227; }
-  #meshStrip button { font: 700 .78rem/1 ui-monospace, Menlo, Consolas, monospace; height: 2rem; padding: 0 .75rem; border-radius: 8px; background: #101010; color: #e8eaef; border: 1px solid #c9a227; cursor: pointer; }
-  #meshStrip button:hover { background: #241c0d; color: #c9a227; }
-  #meshStrip input { width: 10rem; padding: .4rem .55rem; border: 1px solid #c9a227; border-radius: 8px; background: #0e0e0e; color: #e8eaef; font: inherit; }
-  #meshProducts { flex-basis: 100%; margin: 0; }
+  .cite p { font-size: .95rem; }
+  #meshStrip { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem 1rem; font-size: .88rem; color: var(--muted); }
+  #meshStrip .live { color: var(--text); }
+  #meshStrip .live b, #meshStrip .rollup b { color: var(--gold); }
+  #meshStrip .live b { font-size: 1.35rem; margin-right: .35rem; }
+  #meshProducts { flex-basis: 100%; margin: 0; overflow-wrap: anywhere; }
+  .mesh-actions { display: flex; flex-wrap: wrap; gap: .5rem; width: 100%; align-items: center; }
+  #meshStrip button { font: 700 .78rem/1 ui-monospace, Menlo, Consolas, monospace; min-height: 2.5rem; padding: 0 .75rem; border-radius: 8px; background: transparent; color: var(--text); border: 1px solid var(--line); cursor: pointer; }
+  #meshStrip button:hover { border-color: var(--text); }
+  #meshStrip input { flex: 1 1 12rem; min-width: 0; width: auto; max-width: 100%; padding: .45rem .55rem; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text); font: inherit; }
+  #meshStrip input::placeholder { color: var(--muted); opacity: 1; }
+  summary { cursor: pointer; }
+  .card ul { margin: .4rem 0 0; padding-left: 1.15rem; }
+  .card li { margin: .2rem 0; overflow-wrap: anywhere; }
+  footer.quiet { margin: 0; padding: .2rem 0 0; font-size: .9rem; }
+  footer.quiet p { margin: .35rem 0; }
+  footer.quiet a { color: var(--text); }
+  @media (min-width: 720px) {
+    body { padding: 2.4rem 1.25rem 3rem; }
+  }
 </style>
 <body>
-  <div class="brandrow"><img class="brandmark" src="/sigil.png" width="40" height="40" alt="" decoding="async"></div>
-<h1>M.I.A.Lock</h1>
-  <p class="motto">Search broadly. Match probabilistically. Challenge every hit. Preserve provenance. Verify before action. Author Aziel Eliab.</p>
-  <p class="banner">THIS IS: purpose-bound missing-person investigative software — per-person historical event maps (date × time × event × duration), Doe descriptor matching (leads only), uncertainty ellipses, and coverage-heat layers (search intensity — not presence). THIS IS NOT: live location tracking, an identification, a crawler of restricted law-enforcement systems, or automated accusation. Doe hit ≠ ID. Author Aziel Eliab.</p>
+  <a class="skip" href="#downloadBtn">Skip to download</a>
+  <header class="hero">
+    <div class="brandrow"><img class="brandmark" src="/sigil.png" width="40" height="40" alt="" decoding="async"></div>
+    <h1>M.I.A.Lock</h1>
+    <p class="motto">Search broadly. Match probabilistically. Challenge every hit. Preserve provenance. Verify before action.</p>
+    <p class="lede">Purpose-bound missing-person event map by Aziel Eliab. Historical pins, Doe compatibility leads, and a local map.</p>
+    <a class="btn primary dl" id="downloadBtn" href="/download?asset=${DEFAULT_ASSET}" aria-describedby="downloadNote">Download</a>
+    <p class="asset-note" id="downloadNote">${n} downloads · ${DEFAULT_ASSET}</p>
+    <ul class="features">
+      <li>Historical event maps for one person: date, time, event, and duration</li>
+      <li>Doe descriptor matching that ranks compatibility leads</li>
+      <li>Uncertainty ellipses and coverage heat on the local map</li>
+    </ul>
+  </header>
   <div id="meshStrip" aria-label="Suite Live Nodes">
     <div class="live"><b id="meshLiveCount">0</b> Live Nodes</div>
     <div id="meshLine">Suite mesh: off (default). QNM-BUILD-1.0 + QNS-CD-1.0. Not an anonymity network.</div>
     <div class="rollup">live <b id="qnmLive">0</b> · locked <b id="qnmLocked">0</b> · isolated <b id="qnmIsolated">0</b></div>
     <div>No Node Gate · No auto-heal · Aziel Eliab only</div>
-    <div>
+    <div class="mesh-actions">
       <input id="meshBearer" type="text" maxlength="80" placeholder="bearer (required to enable)" aria-label="mesh bearer">
       <button id="meshEnable" type="button" title="Enable suite mesh. Declared bearer required. Default off.">Enable</button>
       <button id="meshDisable" type="button" title="Disable suite mesh (always allowed)">Disable</button>
@@ -469,18 +529,15 @@ async function indexHtml(env) {
     </div>
     <p id="meshProducts">Catalog MCP mesh_* · FragGate slug=mesh · /v1/mesh/* PROXY · QNS-CD-1.0 photon QNS1 cross-map · not AnonBroadcast · not AZMail ring · not a Node Gate · no public qnsd proxy</p>
   </div>
-  <div class="card">
+  <div class="card" id="install">
+    <h2><span class="kicker">On this computer</span>One-click install</h2>
     <div class="nums">
       <p class="count">${v}<span>Views</span></p>
       <p class="count">${n}<span>Downloads</span></p>
     </div>
-    <p class="kid"><strong>Two big buttons.</strong> Download saves the gzip (the Downloads number goes up). One-click install copies a Terminal command. After it finishes, type <code>mialock map</code>.</p>
-    <div class="btns">
-      <a class="btn primary dl" href="/download?asset=${DEFAULT_ASSET}">Download</a>
-      <button type="button" class="btn install" id="install-btn">One-click install</button>
-    </div>
+    <p class="kid">One-click install copies a Terminal command. After it finishes, run <code>mialock map</code> and open http://127.0.0.1:8765 on this computer only.</p>
+    <button type="button" class="btn install" id="install-btn">One-click install</button>
     <pre id="install-cmd">${INSTALL_LINE}</pre>
-    <p class="kid">Then run: <code>mialock map</code> and open http://127.0.0.1:8765 (this computer only).</p>
     <p class="meta">The download count ticks on the Download click. The Worker serves the gzip (HTTP 200). No 302 to GitHub. Forks using this same link are counted automatically. ${DEFAULT_ASSET} — ${n} counted.</p>
     <p class="iso">Isolated counter: Worker <code>mialock-download-tracker</code>, project <code>${PROJECT}</code>, KV <code>MIALOCK_DOWNLOADS</code>. Not mixed with any other product. /v1 does not increment downloads.</p>
     <p class="meta">GitHub: stars ${gh.stars || 0} · forks ${gh.forks || 0} · watchers ${gh.watchers || 0} · release assets ${gh.release_download_count || 0}</p>
@@ -623,6 +680,10 @@ async function indexHtml(env) {
   <p>Aziel Eliab. M.I.A.Lock. https://github.com/AzielEliab/mialock. https://mialock-download-tracker.vibelock.workers.dev.</p>
   <p><a href="https://aziel-runtime.vibelock.workers.dev/">Catalog</a> · <a href="https://github.com/AzielEliab/mialock">GitHub</a> · <a href="https://mialock-download-tracker.vibelock.workers.dev/download">Download</a> · <a href="https://mialock-download-tracker.vibelock.workers.dev/cite.json">cite.json</a></p>
 </section>
+<footer class="quiet">
+  <p>Apache-2.0 · Aziel Eliab · M.I.A.Lock 0.1.1</p>
+  <p><a href="${GITHUB_REPO}">GitHub</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/v1/skill">Skill</a> · <a href="/cite.json">Cite</a></p>
+</footer>
 <!-- /gitbaby-seo -->
 </body>
 </html>`;
