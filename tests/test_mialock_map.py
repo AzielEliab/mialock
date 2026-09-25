@@ -118,6 +118,16 @@ def test_map_handler_people_and_geojson(tmp_path):
         assert "date × time × event × duration" in html
         assert "Uncertainty ellipses" in html
         assert "Coverage heat" in html
+        assert "Show events" in html
+        assert "Advanced" in html
+        assert "prefers-color-scheme" in html
+        assert ":focus-visible" in html
+        conn.request("GET", "/", headers={"Accept": "application/json"})
+        res_json = conn.getresponse()
+        machine = json.loads(res_json.read().decode())
+        assert res_json.status == 200
+        assert machine["product"] == "mialock"
+        assert machine["author"] == "Aziel Eliab"
         conn.request("GET", f"/api/people/{sid}/geojson?mode=all")
         res4 = conn.getresponse()
         geo2 = json.loads(res4.read().decode())
